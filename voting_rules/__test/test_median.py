@@ -1,9 +1,9 @@
 import unittest
-from .median import median
+from voting_rules.median import median
 from random import shuffle
 
 
-class MedianTest(unittest.TestCase):
+class MedianTestCase(unittest.TestCase):
     def test_odd(self):
         # Sorted
         odd_list = [1, 2, 3, 4, 5]
