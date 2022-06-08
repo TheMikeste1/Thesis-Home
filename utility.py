@@ -42,7 +42,7 @@ def get_continuous_weights(values: [float], low: float, high: float) -> [tuple]:
     return list(zip(values, weights))
 
 
-def loss(predicted: float, real: float) -> float:
+def calculate_loss(predicted: float, real: float) -> float:
     """
     Equation 1 of the article.
 
@@ -54,11 +54,11 @@ def loss(predicted: float, real: float) -> float:
     since my implementation will use specific proxies the loss only needs to be
     calculated once.
 
-    >>> loss(1, 1)
+    >>> calculate_loss(1, 1)
     0.0
-    >>> loss(1, 2)
+    >>> calculate_loss(1, 2)
     1.0
-    >>> loss(2, 1)
+    >>> calculate_loss(2, 1)
     1.0
     """
     return (predicted - real) ** 2.0
