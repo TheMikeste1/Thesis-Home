@@ -6,7 +6,7 @@
       <compiler-arguments />
       <envs />
       <main-file>$PROJECT_DIR$/Report/thesis.tex</main-file>
-      <aux-dir>$PROJECT_DIR$/Report/build/buildfiles</aux-dir>
+      <aux-dir>$PROJECT_DIR$/Report/build/auxil</aux-dir>
     </texify-bibtex>
     <method v="2" />
   </configuration>

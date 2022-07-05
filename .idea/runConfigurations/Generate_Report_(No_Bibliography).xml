@@ -10,7 +10,7 @@
       <envs />
       <main-file>$PROJECT_DIR$/Report/thesis.tex</main-file>
       <output-path>$PROJECT_DIR$/Report/build</output-path>
-      <auxil-path>$PROJECT_DIR$/Report/build/buildfiles</auxil-path>
+      <auxil-path>$PROJECT_DIR$/Report/build/auxil</auxil-path>
       <compile-twice>false</compile-twice>
       <output-format>PDF</output-format>
       <latex-distribution>MIKTEX</latex-distribution>
