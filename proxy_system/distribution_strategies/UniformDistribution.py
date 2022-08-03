@@ -1,5 +1,4 @@
-from proxy_system.distribution_strategies.DistributionStrategy \
-    import DistributionStrategy
+from .DistributionStrategy import DistributionStrategy
 
 
 class UniformDistribution(DistributionStrategy):
