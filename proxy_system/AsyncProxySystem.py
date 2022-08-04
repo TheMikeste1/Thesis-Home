@@ -19,7 +19,7 @@ class AsyncProxySystem(ProxySystem):
         with Pool() as pool:
             pool.map(lambda a: a.estimate(truth), agents)
 
-    def _getWeights(self) -> dict[InactiveVoter, Rankings]:
+    def _generate_weights(self) -> dict[InactiveVoter, Rankings]:
         proxies = tuple(self.proxies)
         if len(self.voters) > 20:
             return {a: a.weight(proxies) for a in self.voters}

@@ -41,7 +41,7 @@ class ProxySystem(TruthEstimator):
     def _generate_estimate(self, truth: float) -> float:
         self._update_agents_estimates(self.voters, truth)
         self._update_agents_estimates(self.proxies, truth)
-        weights = self._getWeights()
+        weights = self._generate_weights()
         return self.voting_mechanism.solve(self.proxies, self.voters, weights)
 
     def set_seed(self, seed: int):
@@ -56,6 +56,6 @@ class ProxySystem(TruthEstimator):
         for a in agents:
             a.estimate(truth)
 
-    def _getWeights(self) -> dict[InactiveVoter, Rankings]:
+    def _generate_weights(self) -> dict[InactiveVoter, Rankings]:
         proxies = tuple(self.proxies)
         return {a: a.weight(proxies) for a in self.voters}
