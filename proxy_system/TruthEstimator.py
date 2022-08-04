@@ -7,11 +7,11 @@ class TruthEstimator(Seedable, metaclass=ABCMeta):
     __last_estimate: float
 
     def estimate(self, truth: float) -> float:
-        self.lastEstimation = self._generateEstimate(truth)
+        self.lastEstimation = self._generate_estimate(truth)
         return self.lastEstimation
 
     @abstractmethod
-    def _generateEstimate(self, truth: float) -> float:
+    def _generate_estimate(self, truth: float) -> float:
         pass
 
     @property

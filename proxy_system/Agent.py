@@ -27,6 +27,6 @@ class Agent(TruthEstimator):
     def set_seed(self, seed: int):
         self.distributionStrategy.set_seed(seed)
 
-    def _generateEstimate(self, truth: float) -> float:
+    def _generate_estimate(self, truth: float) -> float:
         return self.__distributionStrategy.get_value(truth - self.__extent,
                                                      truth + self.__extent)

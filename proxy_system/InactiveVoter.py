@@ -36,5 +36,5 @@ class InactiveVoter(TruthEstimator):
                              'estimation.')
         return self.__weightingMechanism.applyWeights(self, proxies)
 
-    def _generateEstimate(self, truth: float) -> float:
+    def _generate_estimate(self, truth: float) -> float:
         return self.__estimator.estimate(truth)

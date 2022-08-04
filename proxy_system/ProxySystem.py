@@ -37,7 +37,7 @@ class ProxySystem(TruthEstimator):
     def votingMechanism(self, votingMechanism: VotingMechanism):
         self.__votingMechanism = votingMechanism
 
-    def _generateEstimate(self, truth: float) -> float:
+    def _generate_estimate(self, truth: float) -> float:
         raise NotImplementedError
 
     def set_seed(self, seed: int):
