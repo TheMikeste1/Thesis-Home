@@ -38,3 +38,6 @@ class InactiveVoter(TruthEstimator):
 
     def _generate_estimate(self, truth: float) -> float:
         return self.__estimator.estimate(truth)
+
+    def set_seed(self, seed: int):
+        self.__estimator.set_seed(seed)
