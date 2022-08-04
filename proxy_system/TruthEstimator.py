@@ -7,15 +7,15 @@ class TruthEstimator(Seedable, metaclass=ABCMeta):
     __last_estimate: float
 
     def estimate(self, truth: float) -> float:
-        self.lastEstimation = self._generate_estimate(truth)
-        return self.lastEstimation
+        self.last_estimation = self._generate_estimate(truth)
+        return self.last_estimation
 
     @abstractmethod
     def _generate_estimate(self, truth: float) -> float:
         pass
 
     @property
-    def lastEstimation(self) -> float:
+    def last_estimation(self) -> float:
         # This is used to lazily initialize __last_estimate.
         # This allows subclasses to use __last_estimate without
         # forcing all subclasses to use it.
@@ -25,6 +25,6 @@ class TruthEstimator(Seedable, metaclass=ABCMeta):
             self.__last_estimate = None
         return self.__last_estimate
 
-    @lastEstimation.setter
-    def lastEstimation(self, value: float):
+    @last_estimation.setter
+    def last_estimation(self, value: float):
         self.__last_estimate = value

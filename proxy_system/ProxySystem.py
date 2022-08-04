@@ -12,12 +12,12 @@ class ProxySystem(TruthEstimator):
 
     def __init__(self, proxies: Iterable[TruthEstimator],
                  voters: Iterable[InactiveVoter],
-                 votingMechanism: VotingMechanism,
+                 voting_mechanism: VotingMechanism,
                  seed: int = None):
         super().__init__(seed)
         self.__proxies = proxies
         self.__voters = voters
-        self.__votingMechanism = votingMechanism
+        self.__voting_mechanism = voting_mechanism
         if seed is not None:
             self.set_seed(seed)
 
@@ -30,12 +30,12 @@ class ProxySystem(TruthEstimator):
         return self.__voters
 
     @property
-    def votingMechanism(self) -> VotingMechanism:
-        return self.__votingMechanism
+    def voting_mechanism(self) -> VotingMechanism:
+        return self.__voting_mechanism
 
-    @votingMechanism.setter
-    def votingMechanism(self, votingMechanism: VotingMechanism):
-        self.__votingMechanism = votingMechanism
+    @voting_mechanism.setter
+    def voting_mechanism(self, votingMechanism: VotingMechanism):
+        self.__voting_mechanism = votingMechanism
 
     def _generate_estimate(self, truth: float) -> float:
         raise NotImplementedError
