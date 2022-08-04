@@ -26,9 +26,3 @@ class TruthEstimator():
     @lastEstimation.setter
     def lastEstimation(self, value: float):
         self.__last_estimate = value
-
-    def test(self):
-        other = TruthEstimator()
-        other.lastEstimation = 1.0
-        assert self.lastEstimation != other.lastEstimation
-
