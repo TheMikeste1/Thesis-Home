@@ -1,7 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
+
+from proxy_system.Seedable import Seedable
 
 
-class TruthEstimator():
+class TruthEstimator(Seedable, metaclass=ABCMeta):
     __last_estimate: float
 
     def estimate(self, truth: float) -> float:
