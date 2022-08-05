@@ -9,6 +9,5 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class RankingItem:
-    rank: int
     weight: float
     proxy: TruthEstimator

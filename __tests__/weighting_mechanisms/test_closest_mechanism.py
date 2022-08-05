@@ -15,3 +15,13 @@ class TestClosestMechanism(unittest.TestCase):
 
         out = mechanism.apply_weights(agent, [closest] + others)
         self.assertEqual(out.agent_ranked(1), closest)
+
+        out.remove_ranking(1)
+        prev = closest.last_estimation
+        for item in out:
+            self.assertEqual(item.weight, 0,
+                             msg="All other items should have weight 0")
+            self.assertGreater(item.proxy.last_estimation, prev,
+                               msg="All items with the same weight should be "
+                                   "ordered by insertion")
+            prev = item.proxy.last_estimation

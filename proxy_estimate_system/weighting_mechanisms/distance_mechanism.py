@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from .weighting_mechanism import WeightingMechanism
 from ..rankings import Rankings
+from ..ranking_item import RankingItem
 
 if TYPE_CHECKING:
     from proxy_estimate_system import TruthEstimator
@@ -15,12 +16,11 @@ class DistanceMechanism(WeightingMechanism):
         distances = {proxy: abs(proxy.last_estimation - agent.last_estimation)
                      for proxy in proxies}
         max_distance = max(distances.values())
-        distances = {proxy: max_distance - dist
-                     for proxy, dist in distances.items()}
-        ret = Rankings()
-        for r, proxy in enumerate(
-                sorted(proxies, key=lambda p: -distances[p]),
-                start=1):
-            weight = distances[proxy]
-            ret.add_ranking(r, weight, proxy)
+
+        # Flip ordering of distances so that the closest proxy has the highest
+        # weight
+        weights = {proxy: max_distance - dist
+                   for proxy, dist in distances.items()}
+        ret = Rankings([RankingItem(weight, proxy)
+                        for proxy, weight in weights.items()])
         return ret
