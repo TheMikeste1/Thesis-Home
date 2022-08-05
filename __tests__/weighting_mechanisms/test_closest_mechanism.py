@@ -2,7 +2,7 @@ import unittest
 
 from proxy_estimate_system.weighting_mechanisms import ClosestMechanism
 
-from ..util.test_agent import TestAgent
+from __tests__.util import TestAgent
 
 
 class TestClosestMechanism(unittest.TestCase):

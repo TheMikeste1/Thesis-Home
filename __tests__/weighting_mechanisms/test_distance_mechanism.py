@@ -2,7 +2,7 @@ import unittest
 
 from proxy_estimate_system.weighting_mechanisms import DistanceMechanism
 
-from ..util.test_agent import TestAgent
+from __tests__.util import TestAgent
 
 
 class TestDistanceMechanism(unittest.TestCase):
