@@ -1,7 +1,6 @@
-from proxy_system.Rankings import Rankings
-from proxy_system.TruthEstimator import TruthEstimator
-from proxy_system.weighting_mechanisms.WeightingMechanism import \
-    WeightingMechanism
+from .rankings import Rankings
+from .truth_estimator import TruthEstimator
+from .weighting_mechanisms.weighting_mechanism import WeightingMechanism
 
 
 class InactiveVoter(TruthEstimator):

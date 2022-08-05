@@ -2,10 +2,10 @@ from random import Random
 
 from typing import Collection
 
-from proxy_system.inactive_voter import InactiveVoter
-from proxy_system.Rankings import Rankings
-from proxy_system.TruthEstimator import TruthEstimator
-from proxy_system.voting_mechanisms.VotingMechanism import VotingMechanism
+from .inactive_voter import InactiveVoter
+from .rankings import Rankings
+from .truth_estimator import TruthEstimator
+from .voting_mechanisms.voting_mechanism import VotingMechanism
 
 
 class ProxySystem(TruthEstimator):

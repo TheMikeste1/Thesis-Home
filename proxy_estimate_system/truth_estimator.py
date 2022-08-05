@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 from abc import ABCMeta, abstractmethod
 
-from proxy_system.Seedable import Seedable
+from .seedable import Seedable
 
 
 class TruthEstimator(Seedable, metaclass=ABCMeta):
-    __last_estimate: float
+    __last_estimate: float | None
 
     def estimate(self, truth: float) -> float:
         self.last_estimation = self._generate_estimate(truth)
@@ -15,7 +17,7 @@ class TruthEstimator(Seedable, metaclass=ABCMeta):
         pass
 
     @property
-    def last_estimation(self) -> float:
+    def last_estimation(self) -> float | None:
         # This is used to lazily initialize __last_estimate.
         # This allows subclasses to use __last_estimate without
         # forcing all subclasses to use it.

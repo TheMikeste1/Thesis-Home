@@ -1,5 +1,5 @@
-from proxy_system.TruthEstimator import TruthEstimator
-from proxy_system.distribution_strategies import DistributionStrategy
+from .distribution_strategies import DistributionStrategy
+from .truth_estimator import TruthEstimator
 
 
 class Agent(TruthEstimator):

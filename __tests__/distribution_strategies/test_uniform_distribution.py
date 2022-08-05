@@ -1,6 +1,6 @@
 import unittest
 
-from proxy_system.distribution_strategies import UniformDistribution
+from proxy_estimate_system.distribution_strategies import UniformDistribution
 
 
 class TestUniformDistribution(unittest.TestCase):

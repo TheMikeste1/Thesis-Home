@@ -1,4 +1,4 @@
-from .DistributionStrategy import DistributionStrategy
+from .distribution_strategy import DistributionStrategy
 
 
 class BetaDistribution(DistributionStrategy):

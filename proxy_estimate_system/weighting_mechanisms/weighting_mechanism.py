@@ -1,7 +1,10 @@
-from abc import ABC, abstractmethod
+from __future__ import annotations
 
-from proxy_system.rankings import Rankings
-from proxy_system.truth_estimator import TruthEstimator
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from proxy_estimate_system import Rankings, TruthEstimator
 
 
 class WeightingMechanism(ABC):

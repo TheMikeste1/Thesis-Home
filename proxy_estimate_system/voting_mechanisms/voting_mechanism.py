@@ -4,9 +4,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from proxy_system import InactiveVoter
-    from proxy_system import Rankings
-    from proxy_system import TruthEstimator
+    from proxy_estimate_system import InactiveVoter, Rankings, TruthEstimator
 
 
 class VotingMechanism(ABC):

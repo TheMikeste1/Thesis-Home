@@ -1,7 +1,11 @@
-from typing import Iterable
+from __future__ import annotations
 
-from proxy_system.RankingItem import RankingItem
-from proxy_system.TruthEstimator import TruthEstimator
+from typing import TYPE_CHECKING, Iterable
+
+from .ranking_item import RankingItem
+
+if TYPE_CHECKING:
+    from .truth_estimator import TruthEstimator
 
 
 class Rankings:

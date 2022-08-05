@@ -3,10 +3,10 @@ from __future__ import annotations
 from multiprocessing import Pool
 from typing import Collection
 
-from proxy_system.InactiveVoter import InactiveVoter
-from proxy_system.ProxySystem import ProxySystem
-from proxy_system.Rankings import Rankings
-from proxy_system.TruthEstimator import TruthEstimator
+from .inactive_voter import InactiveVoter
+from .proxy_system import ProxySystem
+from .rankings import Rankings
+from .truth_estimator import TruthEstimator
 
 
 class AsyncProxySystem(ProxySystem):

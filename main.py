@@ -1,13 +1,13 @@
-import proxy_system as ps
+import proxy_estimate_system as pes
 
 
-non_async = ps.ProxySystem(
-    [ps.Agent(ps.distribution_strategies.GaussianDistribution(), 1)
+non_async = pes.ProxySystem(
+    [pes.Agent(pes.distribution_strategies.GaussianDistribution(), 1)
      for _ in range(10)],
-    [ps.InactiveVoter(
-        ps.Agent(ps.distribution_strategies.UniformDistribution(), 1),
-        ps.weighting_mechanisms.EqualWeightMechanism()) for _ in range(100)],
-    ps.voting_mechanisms.WeightlessAllAverageMechanism()
+    [pes.InactiveVoter(
+        pes.Agent(pes.distribution_strategies.UniformDistribution(), 1),
+        pes.weighting_mechanisms.EqualWeightMechanism()) for _ in range(100)],
+    pes.voting_mechanisms.WeightlessAllAverageMechanism()
 )
 
 estimate = non_async.estimate(0)

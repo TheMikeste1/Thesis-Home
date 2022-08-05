@@ -1,6 +1,6 @@
 import unittest
 
-from proxy_system.distribution_strategies import GaussianDistribution
+from proxy_estimate_system.distribution_strategies import GaussianDistribution
 
 
 class TestGaussianDistribution(unittest.TestCase):

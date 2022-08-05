@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from proxy_system.voting_mechanisms.VotingMechanism import VotingMechanism
+from .voting_mechanism import VotingMechanism
 
 if TYPE_CHECKING:
-    from proxy_system import InactiveVoter, Rankings, TruthEstimator
+    from proxy_estimate_system import InactiveVoter, Rankings, TruthEstimator
 
 
 class WeightlessAllAverageMechanism(VotingMechanism):

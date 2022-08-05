@@ -1,6 +1,6 @@
 import unittest
 
-from proxy_system.distribution_strategies import BetaDistribution
+from proxy_estimate_system.distribution_strategies import BetaDistribution
 
 
 class TestBetaDistribution(unittest.TestCase):
