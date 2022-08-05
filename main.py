@@ -7,7 +7,7 @@ non_async = pes.ProxySystem(
                 pes.Agent(pes.distribution_strategies.UniformDistribution(), 1),
                 pes.weighting_mechanisms.EqualWeightMechanism()) for _ in
             range(100)],
-        pes.voting_mechanisms.average.WeightlessAllAverageMechanism(),
+        pes.voting_mechanisms.average.WeightlessAverageAllMechanism(),
 )
 
 estimate = non_async.estimate(0)

@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from proxy_estimate_system import InactiveVoter, Rankings, TruthEstimator
 
 
-class WeightlessAllAverageMechanism(VotingMechanism):
+class WeightlessAverageAllMechanism(VotingMechanism):
     def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
               rankings: dict[InactiveVoter, Rankings]) -> float:
         proxy_estimates = [proxy.last_estimation for proxy in proxies]
