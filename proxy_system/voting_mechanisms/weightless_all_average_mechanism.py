@@ -1,9 +1,14 @@
-from proxy_system import InactiveVoter, Rankings, TruthEstimator
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from proxy_system.voting_mechanisms.VotingMechanism import VotingMechanism
+
+if TYPE_CHECKING:
+    from proxy_system import InactiveVoter, Rankings, TruthEstimator
 
 
 class WeightlessAllAverageMechanism(VotingMechanism):
-
     def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
               rankings: dict[InactiveVoter, Rankings]) -> float:
         proxy_estimates = [proxy.last_estimation for proxy in proxies]

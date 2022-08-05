@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from proxy_system.Rankings import Rankings
-from proxy_system.TruthEstimator import TruthEstimator
+from proxy_system.rankings import Rankings
+from proxy_system.truth_estimator import TruthEstimator
 
 
 class WeightingMechanism(ABC):

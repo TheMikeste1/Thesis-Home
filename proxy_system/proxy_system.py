@@ -2,7 +2,7 @@ from random import Random
 
 from typing import Collection
 
-from proxy_system.InactiveVoter import InactiveVoter
+from proxy_system.inactive_voter import InactiveVoter
 from proxy_system.Rankings import Rankings
 from proxy_system.TruthEstimator import TruthEstimator
 from proxy_system.voting_mechanisms.VotingMechanism import VotingMechanism

@@ -1,8 +1,8 @@
-from proxy_system.Rankings import Rankings
-from proxy_system.RankingItem import RankingItem
-from proxy_system.TruthEstimator import TruthEstimator
-from proxy_system.weighting_mechanisms.WeightingMechanism import \
-    WeightingMechanism
+from proxy_system.rankings import Rankings
+from proxy_system.ranking_item import RankingItem
+from proxy_system.truth_estimator import TruthEstimator
+from .WeightingMechanism import WeightingMechanism
+
 
 
 class EqualWeightMechanism(WeightingMechanism):

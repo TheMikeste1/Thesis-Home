@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 import numpy as np
 
-from proxy_system.Seedable import Seedable
+from proxy_system.seedable import Seedable
 
 
 # I don't actually need ABCMeta since Seedable is an ABC, but I feel leaving

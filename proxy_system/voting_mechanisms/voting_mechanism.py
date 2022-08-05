@@ -1,8 +1,12 @@
-from abc import ABC, abstractmethod
+from __future__ import annotations
 
-from proxy_system.InactiveVoter import InactiveVoter
-from proxy_system.Rankings import Rankings
-from proxy_system.TruthEstimator import TruthEstimator
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from proxy_system import InactiveVoter
+    from proxy_system import Rankings
+    from proxy_system import TruthEstimator
 
 
 class VotingMechanism(ABC):
