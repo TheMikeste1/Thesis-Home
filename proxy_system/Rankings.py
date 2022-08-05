@@ -27,3 +27,9 @@ class Rankings:
 
     def __iter__(self) -> Iterable[RankingItem]:
         return sorted(self.__rankings.values(), key=lambda rank: rank.rank)
+
+    def add_ranking(self, rank: int, weight: float, agent: TruthEstimator):
+        self.__rankings[rank] = RankingItem(rank, weight, agent)
+
+    def remove_ranking(self, rank: int):
+        del self.__rankings[rank]
