@@ -3,7 +3,6 @@ import proxy_estimate_system.voting_mechanisms
 import proxy_estimate_system.weighting_mechanisms
 
 from .agent import Agent
-from .async_proxy_system import AsyncProxySystem
 from .inactive_voter import InactiveVoter
 from .proxy_system import ProxySystem
 from .ranking_item import RankingItem

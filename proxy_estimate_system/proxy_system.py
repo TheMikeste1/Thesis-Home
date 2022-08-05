@@ -49,8 +49,7 @@ class ProxySystem(TruthEstimator):
             agent.set_seed(gen.randint(-ProxySystem.__random_seed_extent,
                                        ProxySystem.__random_seed_extent))
 
-    @staticmethod
-    def _update_agents_estimates(agents: Collection[TruthEstimator],
+    def _update_agents_estimates(self, agents: Collection[TruthEstimator],
                                  truth: float):
         for a in agents:
             a.estimate(truth)
