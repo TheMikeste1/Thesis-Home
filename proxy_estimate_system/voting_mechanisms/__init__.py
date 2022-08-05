@@ -1,2 +1,4 @@
-from .weightless_all_average_mechanism import WeightlessAllAverageMechanism
+from . import average
+from . import candidate
+
 from .voting_mechanism import VotingMechanism

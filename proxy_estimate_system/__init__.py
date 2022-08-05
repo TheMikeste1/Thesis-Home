@@ -1,6 +1,6 @@
-import proxy_estimate_system.distribution_strategies
-import proxy_estimate_system.voting_mechanisms
-import proxy_estimate_system.weighting_mechanisms
+from . import distribution_strategies
+from . import voting_mechanisms
+from . import weighting_mechanisms
 
 from .agent import Agent
 from .inactive_voter import InactiveVoter
