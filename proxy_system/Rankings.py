@@ -10,19 +10,19 @@ class Rankings:
             rankings = []
         self.__rankings = {rank.rank: rank for rank in rankings}
 
-    def rankFor(self, agent: TruthEstimator) -> int:
+    def rank_for(self, agent: TruthEstimator) -> int:
         for rank in self.__rankings.values():
             if rank.proxy == agent:
                 return rank.rank
         raise ValueError(f"Agent {agent} not in rankings")
 
-    def weightFor(self, agent: TruthEstimator) -> float:
-        return self.__rankings[self.rankFor(agent)].weight
+    def weight_for(self, agent: TruthEstimator) -> float:
+        return self.__rankings[self.rank_for(agent)].weight
 
-    def agentRanked(self, rank: int) -> TruthEstimator:
+    def agent_ranked(self, rank: int) -> TruthEstimator:
         return self.__rankings[rank].proxy
 
-    def weightForRanked(self, rank: int) -> float:
+    def weight_for_ranked(self, rank: int) -> float:
         return self.__rankings[rank].weight
 
     def __iter__(self) -> Iterable[RankingItem]:
