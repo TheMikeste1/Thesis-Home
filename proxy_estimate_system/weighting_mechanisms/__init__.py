@@ -1,4 +1,4 @@
-# from .BordaMechanism import BordaMechanism
+from .borda_mechanism import BordaMechanism
 from .closest_mechanism import ClosestMechanism
 from .distance_mechanism import DistanceMechanism
 from .equal_weight_mechanism import EqualWeightMechanism

@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from .weighting_mechanism import WeightingMechanism
 from ..rankings import Rankings
+from ..ranking_item import RankingItem
 
 if TYPE_CHECKING:
     from proxy_estimate_system import TruthEstimator
@@ -12,4 +13,11 @@ if TYPE_CHECKING:
 class BordaMechanism(WeightingMechanism):
     def apply_weights(self, agent: TruthEstimator,
                       proxies: [TruthEstimator]) -> Rankings:
-        raise NotImplementedError()
+        sorted_ = sorted(proxies,
+                         key=lambda p:
+                         abs(p.last_estimation - agent.last_estimation),
+                         reverse=True)
+        items = [RankingItem(rank, proxy)
+                 for rank, proxy in enumerate(sorted_, start=1)]
+        ret = Rankings(items)
+        return ret
