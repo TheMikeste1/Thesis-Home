@@ -21,7 +21,7 @@ class TruthEstimator(Seedable, metaclass=ABCMeta):
         # forcing all subclasses to use it.
         # Subclasses that do not want to use it simply need to override
         # this property.
-        if not hasattr(self, f'_{self.__class__.__name__}__last_estimate'):
+        if not hasattr(self, f'_TruthEstimator__last_estimate'):
             self.__last_estimate = None
         return self.__last_estimate
 

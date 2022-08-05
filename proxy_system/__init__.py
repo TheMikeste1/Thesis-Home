@@ -1,6 +1,6 @@
-import proxy_system.distribution_strategies
-import proxy_system.voting_mechanisms
-import proxy_system.weighting_mechanisms
+import proxy_system.distribution_strategies as distribution_strategies
+import proxy_system.voting_mechanisms as voting_mechanisms
+import proxy_system.weighting_mechanisms as weighting_mechanisms
 
 from proxy_system.Agent import Agent
 from proxy_system.AsyncProxySystem import AsyncProxySystem

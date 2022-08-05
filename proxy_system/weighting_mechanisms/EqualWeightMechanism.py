@@ -1,4 +1,6 @@
-from proxy_system import RankingItem, Rankings, TruthEstimator
+from proxy_system.Rankings import Rankings
+from proxy_system.RankingItem import RankingItem
+from proxy_system.TruthEstimator import TruthEstimator
 from proxy_system.weighting_mechanisms.WeightingMechanism import \
     WeightingMechanism
 

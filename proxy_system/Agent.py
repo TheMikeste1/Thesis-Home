@@ -30,3 +30,8 @@ class Agent(TruthEstimator):
     def _generate_estimate(self, truth: float) -> float:
         return self.__distribution_strategy.get_value(truth - self.__extent,
                                                       truth + self.__extent)
+
+    def __str__(self):
+        return f'Agent(estimate={self.last_estimation} ' \
+               f'distribution_strategy={self.__distribution_strategy}, ' \
+               f'extent={self.__extent})'

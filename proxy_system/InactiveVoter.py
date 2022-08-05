@@ -41,3 +41,7 @@ class InactiveVoter(TruthEstimator):
 
     def set_seed(self, seed: int):
         self.__estimator.set_seed(seed)
+
+    def __str__(self):
+        return f'InactiveVoter(estimator={ self.__estimator}, ' \
+               f'weighting_mechanism={self.__weighting_mechanism}) '

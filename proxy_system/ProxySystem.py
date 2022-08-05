@@ -15,7 +15,6 @@ class ProxySystem(TruthEstimator):
                  voters: Collection[InactiveVoter],
                  voting_mechanism: VotingMechanism,
                  seed: int = None):
-        super().__init__(seed)
         self.__proxies = proxies
         self.__voters = voters
         self.__voting_mechanism = voting_mechanism
