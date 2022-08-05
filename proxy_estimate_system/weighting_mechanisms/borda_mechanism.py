@@ -13,4 +13,3 @@ class BordaMechanism(WeightingMechanism):
     def apply_weights(self, agent: TruthEstimator,
                       proxies: [TruthEstimator]) -> Rankings:
         raise NotImplementedError()
-
