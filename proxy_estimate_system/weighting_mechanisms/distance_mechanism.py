@@ -12,14 +12,14 @@ if TYPE_CHECKING:
 class DistanceMechanism(WeightingMechanism):
     def apply_weights(self, agent: TruthEstimator,
                       proxies: [TruthEstimator]) -> Rankings:
-        distances = {proxy: abs(proxy.estimate - agent.estimate)
+        distances = {proxy: abs(proxy.last_estimation - agent.last_estimation)
                      for proxy in proxies}
         max_distance = max(distances.values())
         distances = {proxy: max_distance - dist
                      for proxy, dist in distances.items()}
         ret = Rankings()
         for r, proxy in enumerate(
-                sorted(proxies, key=lambda p: distances[p]),
+                sorted(proxies, key=lambda p: -distances[p]),
                 start=1):
             weight = distances[proxy]
             ret.add_ranking(r, weight, proxy)

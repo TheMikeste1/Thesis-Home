@@ -6,7 +6,7 @@ from ..util.test_agent import TestAgent
 
 
 class TestClosestMechanism(unittest.TestCase):
-    def test_closest_mechanism(self):
+    def test_mechanism(self):
         mechanism = ClosestMechanism()
 
         agent = TestAgent(0)

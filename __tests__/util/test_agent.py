@@ -13,3 +13,7 @@ class TestAgent(TruthEstimator):
 
     def __str__(self):
         return f"TestAgent(last_estimation={self.last_estimation})"
+
+    def __repr__(self):
+        return self.__str__()
+
