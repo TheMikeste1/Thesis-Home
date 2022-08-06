@@ -48,6 +48,13 @@ class Rankings:
         self.__assert_rank_in_range(rank)
         del self.__rankings[rank - 1]
 
+    def remove_agent(self, agent: TruthEstimator):
+        for rank, item in enumerate(self.__rankings):
+            if item.proxy == agent:
+                del self.__rankings[rank]
+                return
+        raise ValueError(f"Agent {agent} not in rankings")
+
     def __assert_rank_in_range(self, rank: int):
         assert 0 < rank <= len(self.__rankings), \
             f"Rank {rank} out of range, " \
