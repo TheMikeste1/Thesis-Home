@@ -21,6 +21,7 @@ class InstantRunoffMechanism(VotingMechanism):
             for ranking in rankings.values():
                 ranking.remove_agent(min_vote_proxy)
             votes = self.__count_votes(rankings)
+            max_vote_proxy = max(votes, key=votes.get)
 
         return max_vote_proxy.last_estimate
 
