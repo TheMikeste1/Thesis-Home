@@ -15,7 +15,7 @@ class ClosestMechanism(WeightingMechanism):
                       proxies: [TruthEstimator]) -> Rankings:
         sorted_ = sorted(proxies,
                          key=lambda p:
-                         abs(p.last_estimation - agent.last_estimation))
+                         abs(p.last_estimate - agent.last_estimate))
         ret = Rankings()
         ret.add_ranking(1, sorted_[0])
         for proxy in sorted_[1:]:

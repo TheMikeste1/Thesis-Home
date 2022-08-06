@@ -21,7 +21,7 @@ class TestClosestMechanism(unittest.TestCase):
         for item in out:
             self.assertEqual(item.weight, 0,
                              msg="All other items should have weight 0")
-            self.assertGreater(item.proxy.last_estimation, prev,
+            self.assertGreater(item.proxy.last_estimate, prev,
                                msg="All items with the same weight should be "
                                    "ordered by insertion")
-            prev = item.proxy.last_estimation
+            prev = item.proxy.last_estimate

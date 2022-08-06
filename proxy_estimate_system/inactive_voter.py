@@ -10,12 +10,12 @@ class InactiveVoter(TruthEstimator):
         self.__weighting_mechanism = weighting_mechanism
 
     @property
-    def last_estimation(self) -> float:
-        return self.__estimator.last_estimation
+    def last_estimate(self) -> float:
+        return self.__estimator.last_estimate
 
-    @last_estimation.setter
-    def last_estimation(self, value: float):
-        self.__estimator.last_estimation = value
+    @last_estimate.setter
+    def last_estimate(self, value: float):
+        self.__estimator.last_estimate = value
 
     @property
     def weighting_mechanism(self) -> WeightingMechanism:
@@ -30,7 +30,7 @@ class InactiveVoter(TruthEstimator):
         return self.__estimator
 
     def weight(self, proxies: [TruthEstimator]) -> Rankings:
-        if self.__estimator.last_estimation is None:
+        if self.__estimator.last_estimate is None:
             raise ValueError('Cannot weight proxies without first making an '
                              'estimation.')
         return self.__weighting_mechanism.apply_weights(self, proxies)

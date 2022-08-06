@@ -15,7 +15,7 @@ class BordaMechanism(WeightingMechanism):
                       proxies: [TruthEstimator]) -> Rankings:
         sorted_ = sorted(proxies,
                          key=lambda p:
-                         abs(p.last_estimation - agent.last_estimation),
+                         abs(p.last_estimate - agent.last_estimate),
                          reverse=True)
         items = [RankingItem(rank, proxy)
                  for rank, proxy in enumerate(sorted_, start=1)]
