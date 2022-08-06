@@ -1,1 +1,2 @@
+from .mean_mechanism import MeanMechanism
 from .weightless_average_all_mechanism import WeightlessAverageAllMechanism
