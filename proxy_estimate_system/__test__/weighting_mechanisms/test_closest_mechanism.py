@@ -17,7 +17,7 @@ class TestClosestMechanism(unittest.TestCase):
         self.assertEqual(out.agent_ranked(1), closest)
 
         out.remove_ranking(1)
-        prev = closest.last_estimation
+        prev = closest.last_estimate
         for item in out:
             self.assertEqual(item.weight, 0,
                              msg="All other items should have weight 0")
