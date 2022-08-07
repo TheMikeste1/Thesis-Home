@@ -14,7 +14,7 @@ class MedianMechanism(VotingMechanism):
         proxy_weights, system_weight = self._sum_proxy_weights(rankings)
 
         sum_ = 0
-        for proxy in sorted(proxies, key=lambda x: proxy_weights[x]):
+        for proxy in sorted(proxies, key=lambda x: x.last_estimate):
             sum_ += proxy_weights[proxy]
             if sum_ > system_weight / 2:
                 return proxy.last_estimate
