@@ -13,6 +13,9 @@ if TYPE_CHECKING:
 class DistanceMechanism(WeightingMechanism):
     def apply_weights(self, agent: TruthEstimator,
                       proxies: [TruthEstimator]) -> Rankings:
+        if len(proxies) == 1:
+            return Rankings([RankingItem(1, proxies[0])])
+
         distances = {proxy: abs(proxy.last_estimate - agent.last_estimate)
                      for proxy in proxies}
         max_distance = max(distances.values())
