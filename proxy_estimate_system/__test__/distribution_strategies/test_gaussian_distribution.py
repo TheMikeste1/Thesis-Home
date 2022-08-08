@@ -8,7 +8,7 @@ class TestGaussianDistribution(unittest.TestCase):
         dist = GaussianDistribution()
         min_val = -3
         max_val = 3
-        its = 100_000
+        its = 256_000
         out_of_range = 0
         for _ in range(its):
             val = dist.get_value(min_val, max_val)

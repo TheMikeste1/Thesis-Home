@@ -56,10 +56,11 @@ class Rankings:
         raise ValueError(f"Agent {agent} not in rankings")
 
     def __assert_rank_in_range(self, rank: int):
+        assert len(self.__rankings) > 0, "Empty rankings"
         assert 0 < rank <= len(self.__rankings), \
             f"Rank {rank} out of range, " \
-            f"should be 1 <= rank <= number of rankings " \
-            f"({self.number_of_rankings})"
+            f"should be 1 <= rank <= {self.number_of_rankings} " \
+            f"(the number of rankings)"
 
     @property
     def number_of_rankings(self) -> int:
