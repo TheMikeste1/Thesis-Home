@@ -29,7 +29,7 @@ class WeightedInstantRunoffMechanism(VotingMechanism):
             min_vote_proxy = min(votes, key=votes.get)
             for voter, ranking in rankings.items():
                 removed_rank = ranking.rank_for(min_vote_proxy)
-                ranking.remove_agent(min_vote_proxy)
+                ranking.remove_ranking(removed_rank)
                 # If this was the first choice,
                 # push their weight to their next choice
                 if removed_rank == 1:
