@@ -9,6 +9,10 @@ if TYPE_CHECKING:
 
 
 class WeightlessAverageAllMechanism(VotingMechanism):
+    """
+    Ignores weights of proxies and inactive voters, calculates the average
+    of all proxies and inactive voters.
+    """
     def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
               rankings: dict[InactiveVoter, Rankings]) -> float:
         proxy_estimates = [proxy.last_estimate for proxy in proxies]

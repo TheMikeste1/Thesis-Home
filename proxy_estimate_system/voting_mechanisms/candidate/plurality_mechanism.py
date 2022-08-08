@@ -9,6 +9,10 @@ if TYPE_CHECKING:
 
 
 class PluralityMechanism(VotingMechanism):
+    """
+    Simply returns the estimate the proxy with the highest number of weight.
+    """
+
     def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
               rankings: dict[InactiveVoter, Rankings]) -> float:
         proxy_weights, _ = self._sum_proxy_weights(rankings)

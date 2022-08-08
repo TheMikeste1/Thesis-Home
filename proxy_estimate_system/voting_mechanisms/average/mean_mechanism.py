@@ -9,6 +9,8 @@ if TYPE_CHECKING:
 
 
 class MeanMechanism(VotingMechanism):
+    """Calculates the mean of the weighted proxy estimates."""
+
     def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
               rankings: dict[InactiveVoter, Rankings]) -> float:
         proxy_weights, system_weight = self._sum_proxy_weights(rankings)

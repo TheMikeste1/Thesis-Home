@@ -10,6 +10,13 @@ if TYPE_CHECKING:
 
 
 class RankedChoiceMechanism(VotingMechanism):
+    """
+    Ignores weights. Proxies are given weights according to the number of
+    times they are ranked first. The proxy with the least number of votes is
+    given a weight of 1, while the one with the most is given n, where n is
+    the number of proxies.
+    """
+
     def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
               rankings: dict[InactiveVoter, Rankings]) -> float:
         weights = dict()

@@ -9,6 +9,15 @@ if TYPE_CHECKING:
 
 
 class MedianMechanism(VotingMechanism):
+    """
+    Gives the weighted median proxy's estimate, proxy whose weight sums with
+    those below it when sorted by estimate to is more the half the total
+    system weight.
+
+    When all proxies have the same weight, the median is simply the center
+    proxy when sorted by estimate.
+    """
+
     def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
               rankings: dict[InactiveVoter, Rankings]) -> float:
         proxy_weights, system_weight = self._sum_proxy_weights(rankings)

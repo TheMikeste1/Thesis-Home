@@ -10,6 +10,13 @@ if TYPE_CHECKING:
 
 
 class WeightedInstantRunoffMechanism(VotingMechanism):
+    """
+    Uses instant runoff until some proxy has the majority, then averages
+    using the votes as weights.
+    The total weight in a ranking serves as the number of votes for the
+    ranking's first choice.
+    """
+
     def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
               rankings: dict[InactiveVoter, Rankings]) -> float:
         total_weight_per_voter = {voter: sum(rank.weight for rank in ranking)

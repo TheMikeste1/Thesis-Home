@@ -10,6 +10,11 @@ if TYPE_CHECKING:
 
 
 class InstantRunoffMechanism(VotingMechanism):
+    """
+    Ignores weights. Uses instant runoff to eliminate proxies until some
+    proxy has the majority, then averages using the votes as weights.
+    """
+
     def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
               rankings: dict[InactiveVoter, Rankings]) -> float:
         total_votes = len(inactive)
