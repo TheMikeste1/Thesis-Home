@@ -32,6 +32,6 @@ class Agent(TruthEstimator):
                                                       truth + self.__extent)
 
     def __str__(self):
-        return f'Agent(estimate={self.last_estimation} ' \
+        return f'Agent(estimate={self.last_estimate} ' \
                f'distribution_strategy={self.__distribution_strategy}, ' \
                f'extent={self.__extent})'
