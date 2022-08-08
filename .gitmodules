@@ -1,3 +1,6 @@
 [submodule "Report"]
 	path = Report
 	url = https://github.com/TheMikeste1/Thesis-Report.git
+[submodule "data"]
+	path = data
+	url = https://github.com/TheMikeste1/Thesis-Data.git
