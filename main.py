@@ -72,6 +72,10 @@ VOTING_MECHANISMS = {
 
 
 # %% Functions
+def log(msg: str):
+    print(f"[{datetime.datetime.now()}] {msg}")
+
+
 def perform_iterations():
     proxy_counts = list(range(MIN_PROXIES, MAX_PROXIES + 1, PROXY_STEP))
     inactive_counts = list(range(MIN_INACTIVE, MAX_INACTIVE + 1, INACTIVE_STEP))
@@ -88,10 +92,10 @@ def perform_iterations():
                    * len(PROXY_EXTENTS) * len(inactive_counts) \
                    * len(DISTRIBUTION_STRATEGIES) * len(INACTIVE_EXTENTS) \
                    * len(WEIGHTING_MECHANISMS) * len(VOTING_MECHANISMS)
-    print(f"Performing {total_combos:,} combinations")
 
     total_start = datetime.datetime.now()
     it_start = total_start
+    log(f"Performing {total_combos:,} combinations")
 
     # Keeping track of rows as a Python list and then converting to a DataFrame
     # is much faster than just using a DataFrame for some reason.
@@ -146,9 +150,10 @@ def perform_iterations():
             rows = []  # Reset the rows
 
             current_time = datetime.datetime.now()
-            print(f"{i:,}/{total_combos:,} ({i / total_combos * 100:.2f}%) "
-                  f"{current_time - it_start} since last update, "
-                  f"TOTAL: {current_time - total_start}")
+
+            log(f"{i:,}/{total_combos:,} ({i / total_combos * 100:.2f}%), "
+                f"{current_time - it_start} since last update, "
+                f"TOTAL: {current_time - total_start}")
             it_start = current_time
 
     # Output if there is a remainder
@@ -159,7 +164,7 @@ def perform_iterations():
                           f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}"
         df.to_csv(f"./{OUTPUT_DIR}/data/{output_filename}.csv", index=False)
 
-    print(f"Completed in {datetime.datetime.now() - total_start:.2f}s")
+    log(f"Completed in {datetime.datetime.now() - total_start:.2f}s")
 
 
 if __name__ == "__main__":
