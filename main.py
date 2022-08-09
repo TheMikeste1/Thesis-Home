@@ -139,8 +139,7 @@ def perform_iterations():
         if i % OUTPUT_INTERVAL == 0:
             # Output dataframe
             df = pd.DataFrame(rows)
-            output_filename = f"PES_{len(df) * NUM_ITERATIONS_PER_COMBO}" \
-                              f"_rows" \
+            output_filename = f"PES_{len(df)}_rows" \
                               f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}"
             df.to_csv(f"./{OUTPUT_DIR}/data/{output_filename}.csv",
                       index=False)
@@ -156,8 +155,7 @@ def perform_iterations():
     if rows:
         # Output dataframe
         df = pd.DataFrame(rows)
-        output_filename = f"PES_{len(df) * NUM_ITERATIONS_PER_COMBO}" \
-                          f"_rows" \
+        output_filename = f"PES_{len(df)}_rows" \
                           f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}"
         df.to_csv(f"./{OUTPUT_DIR}/data/{output_filename}.csv", index=False)
 
