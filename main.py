@@ -142,6 +142,8 @@ def perform_iterations():
         # Print update
         if i % OUTPUT_INTERVAL == 0:
             # Output dataframe
+            if not os.path.exists(f"{OUTPUT_DIR}/data"):
+                os.makedirs(f"{OUTPUT_DIR}/data")
             df = pd.DataFrame(rows)
             output_filename = f"PES_{len(df)}_rows" \
                               f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}"
