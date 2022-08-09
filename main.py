@@ -9,7 +9,7 @@ import pandas as pd
 import proxy_estimate_system as pes
 
 # %% Controls
-OUTPUT_DIR = "data"
+OUTPUT_DIR = "Analysis"
 OUTPUT_INTERVAL = 100
 
 MAX_PROXIES = 100
