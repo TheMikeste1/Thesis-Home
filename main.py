@@ -161,12 +161,13 @@ def perform_iterations():
     # Output if there is a remainder
     if rows:
         # Output dataframe
+        if not os.path.exists(f"{OUTPUT_DIR}/data"):
+            os.makedirs(f"{OUTPUT_DIR}/data")
         df = pd.DataFrame(rows)
         output_filename = f"PES_{len(df)}_rows" \
                           f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}"
-        df.to_csv(f"./{OUTPUT_DIR}/data/{output_filename}.csv", index=False)
-
-    log(f"Completed in {datetime.datetime.now() - total_start:.2f}s")
+        df.to_csv(f"./{output_filename}.csv", index=False)
+    log(f"Completed in {datetime.datetime.now() - total_start}s")
 
 
 if __name__ == "__main__":
