@@ -76,18 +76,40 @@ def log(msg: str):
     print(f"[{datetime.datetime.now()}] {msg}")
 
 
+def get_dataframe_from_files(dir_with_files: str, verbose: bool = False) -> pd.DataFrame:
+   if not dir_with_files.endswith('/'):
+      dir_with_files += '/'
+
+   files = os.listdir(dir_with_files)
+   if verbose:
+      print(f"Checking {len(files)} files. . .")
+   data_files = []
+   for i, file in enumerate(files, start=1):
+      if verbose and i % 100 == 0:
+         print(f"Checking {i}/{len(files)} ({i / len(files) * 100:.2f}%). . .")
+      path = f"{dir_with_files}{file}"
+      if path.endswith(".csv") and os.path.isfile(path):
+         data_files.append(path)
+
+
+   if verbose:
+      print(f"Reading {len(data_files)} files. . .")
+   dfs = []
+   for i, file in enumerate(data_files, start=1):
+      if verbose and i % 100 == 0:
+         print(f"Reading {i}/{len(files)} ({i / len(files) * 100:.2f}%). . .")
+      dfs.append(pd.read_csv(file))
+   print("Done reading! Concatenating. . .")
+   return pd.concat(dfs)
+
+
 def perform_iterations():
     proxy_counts = list(range(MIN_PROXIES, MAX_PROXIES + 1, PROXY_STEP))
     inactive_counts = list(range(MIN_INACTIVE, MAX_INACTIVE + 1, INACTIVE_STEP))
-
-    if not os.path.exists(f"{OUTPUT_DIR}/data"):
-        os.makedirs(f"{OUTPUT_DIR}/data")
-
     combinations = product(proxy_counts, DISTRIBUTION_STRATEGIES, PROXY_EXTENTS,
                            inactive_counts, DISTRIBUTION_STRATEGIES,
                            INACTIVE_EXTENTS, WEIGHTING_MECHANISMS,
                            VOTING_MECHANISMS)
-
     total_combos = len(proxy_counts) * len(DISTRIBUTION_STRATEGIES) \
                    * len(PROXY_EXTENTS) * len(inactive_counts) \
                    * len(DISTRIBUTION_STRATEGIES) * len(INACTIVE_EXTENTS) \
@@ -139,8 +161,8 @@ def perform_iterations():
                 "SquaredError"              : sout * sout,
                 # "Seed"                      : run_seed,
             })
-        if not os.path.exists(f"{OUTPUT_DIR}/data"):
-            os.makedirs(f"{OUTPUT_DIR}/data")
+        if not os.path.exists(f"{OUTPUT_DIR}/tmp"):
+            os.makedirs(f"{OUTPUT_DIR}/tmp")
         # Output dataframe
         df = pd.DataFrame(rows)
         output_filename = f"PES" \
@@ -154,9 +176,9 @@ def perform_iterations():
                           f"_{inactive_extent}" \
                           f"_{inactive_weighting_mech}" \
                           f"_{voting_mechanism}"
-        df.to_csv(f"./{OUTPUT_DIR}/data/{output_filename}.csv",
+        df.to_csv(f"./{OUTPUT_DIR}/tmp/{output_filename}.csv",
                   index=False)
-
+        
         # Print update
         if i % OUTPUT_INTERVAL == 0:
             current_time = datetime.datetime.now()
@@ -164,6 +186,22 @@ def perform_iterations():
                 f"{current_time - it_start} since last update, "
                 f"TOTAL: {current_time - total_start}")
             it_start = current_time
+
+    log(f"Combining results. . .")
+    results = get_dataframe_from_files(f"{OUTPUT_DIR}/tmp")
+    output_filename = f"PES" \
+                      f"_{len(df)}_rows"\
+                      f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}"
+    results.to_csv(f"./{OUTPUT_DIR}/{output_filename}.csv",
+                  index=False)
+
+    log(f"Cleaning up. . .")
+    for file in os.listdir(f"./{OUTPUT_DIR}/tmp"):
+        if file.startswith("PES") and\
+         file.endswith(".csv") and \
+         os.path.isfile(f"./{OUTPUT_DIR}/tmp/{file}"):
+            os.remove(f"./{OUTPUT_DIR}/tmp/{file}")
+    os.rmdir(f"./{OUTPUT_DIR}/tmp/")
 
     log(f"Completed in {datetime.datetime.now() - total_start}s")
 
