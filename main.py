@@ -9,22 +9,22 @@ import pandas as pd
 import proxy_estimate_system as pes
 
 # %% Controls
-OUTPUT_DIR = "Analysis"
+OUTPUT_DIR = "data"
 OUTPUT_INTERVAL = 100
 
-MAX_PROXIES = 100
-MIN_PROXIES = 10
-PROXY_STEP = 10
+MAX_PROXIES = 30
+MIN_PROXIES = 1
+PROXY_STEP = 1
 PROXY_EXTENTS = {1}
 
-MAX_INACTIVE = 100
-MIN_INACTIVE = 10
-INACTIVE_STEP = 10
+MAX_INACTIVE = 30
+MIN_INACTIVE = 1
+INACTIVE_STEP = 1
 INACTIVE_EXTENTS = {1}
 
-NUM_ITERATIONS_PER_COMBO = 100
+NUM_ITERATIONS_PER_COMBO = 10
 
-random.seed(161803399)
+# random.seed(161803399)
 
 WEIGHTING_MECHANISMS = {
     "Borda"      : pes.weighting_mechanisms.BordaMechanism,
