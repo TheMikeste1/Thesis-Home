@@ -99,11 +99,11 @@ def perform_iterations():
 
     # Keeping track of rows as a Python list and then converting to a DataFrame
     # is much faster than just using a DataFrame for some reason.
-    rows = []
     for i, (num_proxies, proxy_dist_strategy, proxy_extent,
             num_inactive, inactive_dist_strategy, inactive_extent,
             inactive_weighting_mech,
             voting_mechanism) in enumerate(combinations, start=1):
+
         # Create system
         proxies = [pes.Agent(
                 DISTRIBUTION_STRATEGIES[proxy_dist_strategy](),
@@ -121,6 +121,7 @@ def perform_iterations():
         system = pes.ProxySystem(proxies, inactive_voters, vm)
 
         # Perform tests
+        rows = []
         for _ in range(NUM_ITERATIONS_PER_COMBO):
             # run_seed = random.randint(0, 2 ** 64)
             # system.set_seed(run_seed)
@@ -138,35 +139,32 @@ def perform_iterations():
                 "SquaredError"              : sout * sout,
                 # "Seed"                      : run_seed,
             })
+        if not os.path.exists(f"{OUTPUT_DIR}/data"):
+            os.makedirs(f"{OUTPUT_DIR}/data")
+        # Output dataframe
+        df = pd.DataFrame(rows)
+        output_filename = f"PES" \
+                          f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}" \
+                          f"_{len(df)}_rows" \
+                          f"_{num_proxies}_proxies" \
+                          f"_{proxy_dist_strategy}" \
+                          f"_{proxy_extent}" \
+                          f"_{num_inactive}_inactive" \
+                          f"_{inactive_dist_strategy}" \
+                          f"_{inactive_extent}" \
+                          f"_{inactive_weighting_mech}" \
+                          f"_{voting_mechanism}"
+        df.to_csv(f"./{OUTPUT_DIR}/data/{output_filename}.csv",
+                  index=False)
 
         # Print update
         if i % OUTPUT_INTERVAL == 0:
-            # Output dataframe
-            if not os.path.exists(f"{OUTPUT_DIR}/data"):
-                os.makedirs(f"{OUTPUT_DIR}/data")
-            df = pd.DataFrame(rows)
-            output_filename = f"PES_{len(df)}_rows" \
-                              f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}"
-            df.to_csv(f"./{OUTPUT_DIR}/data/{output_filename}.csv",
-                      index=False)
-            rows = []  # Reset the rows
-
             current_time = datetime.datetime.now()
-
             log(f"{i:,}/{total_combos:,} ({i / total_combos * 100:.2f}%), "
                 f"{current_time - it_start} since last update, "
                 f"TOTAL: {current_time - total_start}")
             it_start = current_time
 
-    # Output if there is a remainder
-    if rows:
-        # Output dataframe
-        if not os.path.exists(f"{OUTPUT_DIR}/data"):
-            os.makedirs(f"{OUTPUT_DIR}/data")
-        df = pd.DataFrame(rows)
-        output_filename = f"PES_{len(df)}_rows" \
-                          f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}"
-        df.to_csv(f"./{output_filename}.csv", index=False)
     log(f"Completed in {datetime.datetime.now() - total_start}s")
 
 
