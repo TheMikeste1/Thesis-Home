@@ -190,7 +190,7 @@ def perform_iterations():
     log(f"Combining results. . .")
     results = get_dataframe_from_files(f"{OUTPUT_DIR}/tmp")
     output_filename = f"PES" \
-                      f"_{len(df)}_rows"\
+                      f"_{len(results)}_rows"\
                       f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}"
     results.to_csv(f"./{OUTPUT_DIR}/{output_filename}.csv",
                   index=False)
