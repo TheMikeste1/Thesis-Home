@@ -73,9 +73,6 @@ VOTING_MECHANISMS = {
 
 WEIGHT_IGNORING_VMS = {
     "WeightlessAverageAll",
-    "InstantRunoffAverage",
-    "InstantRunoffCandidate",
-    "RankedChoice"
 }
 
 
@@ -120,7 +117,7 @@ def perform_iterations():
     inactive_counts = list(range(MIN_INACTIVE, MAX_INACTIVE + 1, INACTIVE_STEP))
     combinations = product(proxy_counts, DISTRIBUTION_STRATEGIES, PROXY_EXTENTS,
                            inactive_counts, DISTRIBUTION_STRATEGIES,
-                           INACTIVE_EXTENTS, WEIGHTING_MECHANISMS)
+                           INACTIVE_EXTENTS)
     paired_mechs = [
                        (v, "NoOp")
                        for v in WEIGHT_IGNORING_VMS
@@ -128,7 +125,7 @@ def perform_iterations():
                        (v, w)
                        for v in
                        set(VOTING_MECHANISMS) - set(WEIGHT_IGNORING_VMS)
-                       for w in WEIGHTING_MECHANISMS
+                       for w in set(WEIGHTING_MECHANISMS) - {"NoOp"}
                    ]
     total_combos = len(proxy_counts) * len(DISTRIBUTION_STRATEGIES) \
                    * len(PROXY_EXTENTS) * len(inactive_counts) \
