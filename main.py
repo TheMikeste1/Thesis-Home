@@ -92,10 +92,7 @@ def get_dataframe_from_files(dir_with_files: str,
     if verbose:
         log(f"Checking {len(files)} files. . .")
     data_files = []
-    for i, file in enumerate(files, start=1):
-        if verbose and i % 100 == 0:
-            log(f"Checking {i}/{len(files)} ("
-                f"{i / len(files) * 100:.2f}%). . .")
+    for file in files:
         path = f"{dir_with_files}{file}"
         if path.endswith(".feather") and os.path.isfile(path):
             data_files.append(path)
@@ -108,7 +105,9 @@ def get_dataframe_from_files(dir_with_files: str,
             log(f"Reading {i}/{len(files)} "
                 f"({i / len(files) * 100:.2f}%). . .")
         dfs.append(pd.read_feather(file))
-    log("Done reading! Concatenating. . .")
+    if verbose:
+        log("Done reading! Concatenating. . .")
+        log(f"Total rows: {sum(len(df) for df in dfs):,}")
     return pd.concat(dfs).reset_index(drop=True)
 
 
@@ -123,6 +122,12 @@ def output_df(df: pd.DataFrame, dir_: str):
     output_filename = f"PES" \
                       f"_{len(df)}_rows" \
                       f"_{now.strftime('%d-%m-%Y_%H-%M-%S')}"
+    # Check it the file already exists so we don't overwrite it
+    if os.path.exists(f"{dir_}/{output_filename}.feather"):
+        i = 1
+        while os.path.exists(f"{dir_}/{output_filename}_{i}.feather"):
+            i += 1
+        output_filename += f"_{i}"
     df.to_feather(f"{dir_}/{output_filename}.feather")
 
 
@@ -212,15 +217,24 @@ def perform_iterations():
         # Output dataframe
         df = pd.DataFrame(rows)
         output_df(df, f"{OUTPUT_DIR}/tmp")
+        del rows
+
+        current_time = datetime.datetime.now()
+        log(f"{total_combos:,}/{total_combos:,} "
+            f"({100:.2f}%), "
+            f"{current_time - it_start} since last update, "
+            f"TOTAL: {current_time - total_start}")
 
     log(f"Combining results. . .")
-    results = get_dataframe_from_files(f"{OUTPUT_DIR}/tmp")
+    results = get_dataframe_from_files(f"{OUTPUT_DIR}/tmp", verbose=True)
     output_df(results, f"{OUTPUT_DIR}")
 
-    log(f"Cleaning up. . .")
-    cleanup_output_dir()
-
     log(f"Completed in {datetime.datetime.now() - total_start}")
+
+    if input("Delete temporary files? (y/n) ") == "y":
+        log(f"Cleaning up. . .")
+        cleanup_output_dir()
+        log(f"Done cleaning up.")
 
 
 def run_iterations(system: pes.ProxySystem, num_iterations: int) -> [int]:
