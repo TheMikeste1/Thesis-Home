@@ -116,14 +116,14 @@ def log(msg: str):
     print(f"[{datetime.datetime.now()}] {msg}")
 
 
-def output_df(df: pd.DataFrame):
-    if not os.path.exists(f"{OUTPUT_DIR}/tmp"):
-        os.makedirs(f"{OUTPUT_DIR}/tmp")
+def output_df(df: pd.DataFrame, dir_: str):
+    if not os.path.exists(dir_):
+        os.makedirs(dir_)
     now = datetime.datetime.now()
     output_filename = f"PES" \
                       f"_{len(df)}_rows" \
                       f"_{now.strftime('%d-%m-%Y_%H-%M-%S')}"
-    df.to_feather(f"./{OUTPUT_DIR}/tmp/{output_filename}.feather")
+    df.to_feather(f"{dir_}/{output_filename}.feather")
 
 
 def perform_iterations():
@@ -197,7 +197,7 @@ def perform_iterations():
         if i % OUTPUT_INTERVAL == 0:
             # Output dataframe
             df = pd.DataFrame(rows)
-            output_df(df)
+            output_df(df, f"{OUTPUT_DIR}/tmp")
             rows = []
 
             current_time = datetime.datetime.now()
@@ -211,11 +211,11 @@ def perform_iterations():
     if rows:
         # Output dataframe
         df = pd.DataFrame(rows)
-        output_df(df)
+        output_df(df, f"{OUTPUT_DIR}/tmp")
 
     log(f"Combining results. . .")
     results = get_dataframe_from_files(f"{OUTPUT_DIR}/tmp")
-    output_df(results)
+    output_df(results, f"{OUTPUT_DIR}")
 
     log(f"Cleaning up. . .")
     cleanup_output_dir()
