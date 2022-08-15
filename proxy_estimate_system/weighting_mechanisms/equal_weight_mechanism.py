@@ -13,4 +13,9 @@ if TYPE_CHECKING:
 class EqualWeightMechanism(WeightingMechanism):
     def apply_weights(self, agent: TruthEstimator, proxies: [TruthEstimator]) \
             -> Rankings:
-        return Rankings([RankingItem(1, proxy) for proxy in proxies])
+        return Rankings([RankingItem(1, proxy)
+                         for proxy in
+                         sorted(proxies,
+                                key=lambda p: abs(agent.last_estimate
+                                                  - p.last_estimate))
+                         ])
