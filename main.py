@@ -195,7 +195,15 @@ def perform_iterations():
                 f"{current_time - it_start} since last update, "
                 f"TOTAL: {current_time - total_start}")
             it_start = current_time
-
+    if rows:
+        # Output dataframe
+        if not os.path.exists(f"{OUTPUT_DIR}/tmp"):
+            os.makedirs(f"{OUTPUT_DIR}/tmp")
+        df = pd.DataFrame(rows)
+        output_filename = f"PES" \
+                          f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}" \
+                          f"_{len(df)}_rows"
+        df.to_feather(f"./{OUTPUT_DIR}/tmp/{output_filename}.feather")
     log(f"Combining results. . .")
     results = get_dataframe_from_files(f"{OUTPUT_DIR}/tmp")
     output_filename = f"PES" \
