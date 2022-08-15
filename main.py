@@ -1,7 +1,6 @@
 import os
 from functools import partial
 from itertools import product
-import random
 import datetime
 
 import pandas as pd
@@ -23,8 +22,6 @@ INACTIVE_STEP = 1
 INACTIVE_EXTENTS = {1}
 
 NUM_ITERATIONS_PER_COMBO = 10
-
-# random.seed(161803399)
 
 WEIGHTING_MECHANISMS = {
     "Borda"      : pes.weighting_mechanisms.BordaMechanism,
@@ -77,8 +74,13 @@ WEIGHT_IGNORING_VMS = {
 
 
 # %% Functions
-def log(msg: str):
-    print(f"[{datetime.datetime.now()}] {msg}")
+def cleanup_output_dir():
+    for file in os.listdir(f"./{OUTPUT_DIR}/tmp"):
+        if file.startswith("PES") and \
+                file.endswith(".feather") and \
+                os.path.isfile(f"./{OUTPUT_DIR}/tmp/{file}"):
+            os.remove(f"./{OUTPUT_DIR}/tmp/{file}")
+    os.rmdir(f"./{OUTPUT_DIR}/tmp/")
 
 
 def get_dataframe_from_files(dir_with_files: str,
@@ -108,6 +110,20 @@ def get_dataframe_from_files(dir_with_files: str,
         dfs.append(pd.read_feather(file))
     log("Done reading! Concatenating. . .")
     return pd.concat(dfs).reset_index(drop=True)
+
+
+def log(msg: str):
+    print(f"[{datetime.datetime.now()}] {msg}")
+
+
+def output_df(df: pd.DataFrame):
+    if not os.path.exists(f"{OUTPUT_DIR}/tmp"):
+        os.makedirs(f"{OUTPUT_DIR}/tmp")
+    now = datetime.datetime.now()
+    output_filename = f"PES" \
+                      f"_{len(df)}_rows" \
+                      f"_{now.strftime('%d-%m-%Y_%H-%M-%S')}"
+    df.to_feather(f"./{OUTPUT_DIR}/tmp/{output_filename}.feather")
 
 
 def perform_iterations():
@@ -142,6 +158,7 @@ def perform_iterations():
             num_inactive, inactive_dist_strategy, inactive_extent,
             (voting_mechanism, inactive_weighting_mech)) \
             in enumerate(combinations, start=1):
+
         # Create system
         proxies = [pes.Agent(
                 DISTRIBUTION_STRATEGIES[proxy_dist_strategy](),
@@ -159,34 +176,28 @@ def perform_iterations():
         system = pes.ProxySystem(proxies, inactive_voters, vm)
 
         # Perform tests
-        for _ in range(NUM_ITERATIONS_PER_COMBO):
-            # run_seed = random.randint(0, 2 ** 64)
-            # system.set_seed(run_seed)
-            sout = system.estimate(0)
-            rows.append({
-                "ProxyCount"                : num_proxies,
-                "ProxyDistribution"         : proxy_dist_strategy,
-                "ProxyExtent"               : proxy_extent,
-                "InactiveCount"             : num_inactive,
-                "InactiveDistribution"      : inactive_dist_strategy,
-                "InactiveExtent"            : inactive_extent,
-                "InactiveWeightingMechanism": inactive_weighting_mech,
-                "VotingMechanism"           : voting_mechanism,
-                "SystemEstimate"            : sout,
-                "SquaredError"              : sout * sout,
-                # "Seed"                      : run_seed,
-            })
+        rows.extend(
+                {
+                    "ProxyCount"                : num_proxies,
+                    "ProxyDistribution"         : proxy_dist_strategy,
+                    "ProxyExtent"               : proxy_extent,
+                    "InactiveCount"             : num_inactive,
+                    "InactiveDistribution"      : inactive_dist_strategy,
+                    "InactiveExtent"            : inactive_extent,
+                    "InactiveWeightingMechanism": inactive_weighting_mech,
+                    "VotingMechanism"           : voting_mechanism,
+                    "SystemEstimate"            : sout,
+                    "SquaredError"              : sout * sout,
+                    # "Seed"                      : run_seed,
+                }
+                for sout in run_iterations(system, NUM_ITERATIONS_PER_COMBO)
+        )
 
         # Print update
         if i % OUTPUT_INTERVAL == 0:
             # Output dataframe
-            if not os.path.exists(f"{OUTPUT_DIR}/tmp"):
-                os.makedirs(f"{OUTPUT_DIR}/tmp")
             df = pd.DataFrame(rows)
-            output_filename = f"PES" \
-                              f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}" \
-                              f"_{len(df)}_rows"
-            df.to_feather(f"./{OUTPUT_DIR}/tmp/{output_filename}.feather")
+            output_df(df)
             rows = []
 
             current_time = datetime.datetime.now()
@@ -195,31 +206,29 @@ def perform_iterations():
                 f"{current_time - it_start} since last update, "
                 f"TOTAL: {current_time - total_start}")
             it_start = current_time
+
+    # Output final dataframe
     if rows:
         # Output dataframe
-        if not os.path.exists(f"{OUTPUT_DIR}/tmp"):
-            os.makedirs(f"{OUTPUT_DIR}/tmp")
         df = pd.DataFrame(rows)
-        output_filename = f"PES" \
-                          f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}" \
-                          f"_{len(df)}_rows"
-        df.to_feather(f"./{OUTPUT_DIR}/tmp/{output_filename}.feather")
+        output_df(df)
+
     log(f"Combining results. . .")
     results = get_dataframe_from_files(f"{OUTPUT_DIR}/tmp")
-    output_filename = f"PES" \
-                      f"_{len(results)}_rows" \
-                      f"_{it_start.strftime('%d-%m-%Y_%H-%M-%S')}"
-    results.to_feather(f"./{OUTPUT_DIR}/{output_filename}.feather")
+    output_df(results)
 
     log(f"Cleaning up. . .")
-    for file in os.listdir(f"./{OUTPUT_DIR}/tmp"):
-        if file.startswith("PES") and \
-                file.endswith(".feather") and \
-                os.path.isfile(f"./{OUTPUT_DIR}/tmp/{file}"):
-            os.remove(f"./{OUTPUT_DIR}/tmp/{file}")
-    os.rmdir(f"./{OUTPUT_DIR}/tmp/")
+    cleanup_output_dir()
 
     log(f"Completed in {datetime.datetime.now() - total_start}")
+
+
+def run_iterations(system: pes.ProxySystem, num_iterations: int) -> [int]:
+    output = [
+        system.estimate(0)
+        for _ in range(num_iterations)
+    ]
+    return output
 
 
 if __name__ == "__main__":
