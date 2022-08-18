@@ -21,7 +21,7 @@ MIN_INACTIVE = 1
 INACTIVE_STEP = 1
 INACTIVE_EXTENTS = {1}
 
-NUM_ITERATIONS_PER_COMBO = 10
+NUM_ITERATIONS_PER_COMBO = 20
 
 WEIGHTING_MECHANISMS = {
     "Borda"      : pes.weighting_mechanisms.BordaMechanism,
@@ -227,6 +227,10 @@ def perform_iterations():
 
     log(f"Combining results. . .")
     results = get_dataframe_from_files(f"{OUTPUT_DIR}/tmp", verbose=True)
+    # Shrink categorical data types
+    for col in ["ProxyDistribution", "InactiveDistribution",
+                "InactiveWeightingMechanism", "VotingMechanism"]:
+        results[col] = results[col].astype("category")
     output_df(results, f"{OUTPUT_DIR}")
 
     log(f"Completed in {datetime.datetime.now() - total_start}")
