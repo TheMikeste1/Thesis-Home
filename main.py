@@ -137,7 +137,8 @@ def perform_iterations():
 
     paired_mechs = [
                        (v, "NoOp")
-                       for v in WEIGHT_IGNORING_VMS
+                       for v in
+                       set(VOTING_MECHANISMS) & set(WEIGHT_IGNORING_VMS)
                    ] + [
                        (v, w)
                        for v in
