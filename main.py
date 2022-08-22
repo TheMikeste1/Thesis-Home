@@ -15,11 +15,33 @@ MAX_PROXIES = 30
 MIN_PROXIES = 1
 PROXY_STEP = 1
 PROXY_EXTENTS = {1}
+PROXY_DISTRIBUTIONS = {
+    "Uniform",
+    "Gaussian",
+    "Beta_.3_.3",
+    "Beta_4_4",
+    "Beta_4_1",
+    "Beta_3_.3",
+    "Beta_1_4",
+    "Beta_.3_3",
+}
+
+
 
 MAX_INACTIVE = 30
 MIN_INACTIVE = 1
 INACTIVE_STEP = 1
 INACTIVE_EXTENTS = {1}
+INACTIVE_DISTRIBUTIONS = {
+    "Uniform",
+    "Gaussian",
+    "Beta_.3_.3",
+    "Beta_4_4",
+    "Beta_4_1",
+    "Beta_3_.3",
+    "Beta_1_4",
+    "Beta_.3_3",
+}
 
 NUM_ITERATIONS_PER_COMBO = 20
 
@@ -31,6 +53,8 @@ WEIGHTING_MECHANISMS = {
     "NoOp"       : pes.weighting_mechanisms.NoOpMechanism,
 }
 
+
+# %% System
 DISTRIBUTION_STRATEGIES = {
     "Uniform"   : pes.distribution_strategies.UniformDistribution,
     "Gaussian"  : pes.distribution_strategies.GaussianDistribution,
@@ -157,8 +181,8 @@ def perform_iterations():
     it_start = total_start
     log(f"Performing {total_combos:,} combinations")
 
-    combinations = product(proxy_counts, DISTRIBUTION_STRATEGIES, PROXY_EXTENTS,
-                           inactive_counts, DISTRIBUTION_STRATEGIES,
+    combinations = product(proxy_counts, PROXY_DISTRIBUTIONS, PROXY_EXTENTS,
+                           inactive_counts, INACTIVE_DISTRIBUTIONS,
                            INACTIVE_EXTENTS, paired_mechs)
 
     # Keeping track of rows as a Python list and then converting to a DataFrame
