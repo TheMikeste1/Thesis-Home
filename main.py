@@ -173,9 +173,9 @@ def perform_iterations():
                        set(VOTING_MECHANISMS) - set(WEIGHT_IGNORING_VMS)
                        for w in set(WEIGHTING_MECHANISMS) - {"NoOp"}
                    ]
-    non_vm_combos = len(proxy_counts) * len(DISTRIBUTION_STRATEGIES) \
+    non_vm_combos = len(proxy_counts) * len(PROXY_DISTRIBUTIONS) \
                     * len(PROXY_EXTENTS) * len(inactive_counts) \
-                    * len(DISTRIBUTION_STRATEGIES) * len(INACTIVE_EXTENTS)
+                    * len(INACTIVE_DISTRIBUTIONS) * len(INACTIVE_EXTENTS)
     total_combos = non_vm_combos * len(paired_mechs)
     total_start = datetime.datetime.now()
     it_start = total_start
