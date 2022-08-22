@@ -42,6 +42,10 @@ DISTRIBUTION_STRATEGIES = {
                           a=4, b=1),
     "Beta_3_.3" : partial(pes.distribution_strategies.BetaDistribution,
                           a=3, b=0.3),
+    "Beta_1_4"  : partial(pes.distribution_strategies.BetaDistribution,
+                          a=1, b=4),
+    "Beta_.3_3" : partial(pes.distribution_strategies.BetaDistribution,
+                          a=0.3, b=3),
 }
 
 VOTING_MECHANISMS = {
