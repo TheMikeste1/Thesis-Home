@@ -102,13 +102,13 @@ WEIGHT_IGNORING_VMS = {
 
 
 # %% Functions
-def cleanup_output_dir():
-    for file in os.listdir(f"./{OUTPUT_DIR}/tmp"):
+def cleanup_output_dir(path: str):
+    for file in os.listdir(path):
         if file.startswith("PES") and \
                 file.endswith(".feather") and \
-                os.path.isfile(f"./{OUTPUT_DIR}/tmp/{file}"):
-            os.remove(f"./{OUTPUT_DIR}/tmp/{file}")
-    os.rmdir(f"./{OUTPUT_DIR}/tmp/")
+                os.path.isfile(f"{path}/{file}"):
+            os.remove(f"{path}/{file}")
+    os.rmdir(path)
 
 
 def get_dataframe_from_files(dir_with_files: str,
@@ -185,6 +185,7 @@ def perform_iterations():
                            inactive_counts, INACTIVE_DISTRIBUTIONS,
                            INACTIVE_EXTENTS, paired_mechs)
 
+    tmp_directory = f"{OUTPUT_DIR}/tmp_{total_start.strftime('%d-%m-%Y_%H-%M-%S')}"
     # Keeping track of rows as a Python list and then converting to a DataFrame
     # is much faster than just using a DataFrame for some reason.
     rows = []
@@ -231,7 +232,7 @@ def perform_iterations():
         if i % OUTPUT_INTERVAL == 0:
             # Output dataframe
             df = pd.DataFrame(rows)
-            output_df(df, f"{OUTPUT_DIR}/tmp")
+            output_df(df, tmp_directory)
             rows = []
 
             current_time = datetime.datetime.now()
@@ -245,7 +246,7 @@ def perform_iterations():
     if rows:
         # Output dataframe
         df = pd.DataFrame(rows)
-        output_df(df, f"{OUTPUT_DIR}/tmp")
+        output_df(df, tmp_directory)
         del rows
 
         current_time = datetime.datetime.now()
@@ -255,7 +256,7 @@ def perform_iterations():
             f"TOTAL: {current_time - total_start}")
 
     log(f"Combining results. . .")
-    results = get_dataframe_from_files(f"{OUTPUT_DIR}/tmp", verbose=True)
+    results = get_dataframe_from_files(tmp_directory, verbose=True)
     # Shrink categorical data types
     for col in ["ProxyDistribution", "InactiveDistribution",
                 "InactiveWeightingMechanism", "VotingMechanism"]:
@@ -266,7 +267,7 @@ def perform_iterations():
 
     if input("Delete temporary files? (y/n) ") == "y":
         log(f"Cleaning up. . .")
-        cleanup_output_dir()
+        cleanup_output_dir(tmp_directory)
         log(f"Done cleaning up.")
 
 
