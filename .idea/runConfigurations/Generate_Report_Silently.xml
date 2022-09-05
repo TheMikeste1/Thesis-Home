@@ -6,7 +6,7 @@
       <sumatra-path />
       <pdf-viewer>NONE</pdf-viewer>
       <viewer-command />
-      <compiler-arguments />
+      <compiler-arguments>--enable-write18</compiler-arguments>
       <envs />
       <main-file>$PROJECT_DIR$/Report/thesis.tex</main-file>
       <output-path>$PROJECT_DIR$/Report/build</output-path>
