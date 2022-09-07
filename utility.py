@@ -20,10 +20,8 @@ def get_continuous_weights(values: [float], low: float, high: float) -> [tuple]:
     low, high = min(low, high), max(low, high)
 
     values = sorted(values)
-    assert low <= values[0] <= high, \
-        "Values must be in the range [min_val, max_val]"
-    assert low <= values[-1] <= high, \
-        "Values must be in the range [min_val, max_val]"
+    assert low <= values[0] <= high, "Values must be in the range [min_val, max_val]"
+    assert low <= values[-1] <= high, "Values must be in the range [min_val, max_val]"
 
     weights = [None] * len(values)
 
@@ -66,4 +64,5 @@ def calculate_loss(predicted: float, real: float) -> float:
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()
