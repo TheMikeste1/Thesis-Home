@@ -3,8 +3,12 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
+# Get Arrow to create arrow files
+find_package(Arrow CONFIG REQUIRED)
+
 # Add source to this project's executable.
-add_executable (ProxyEstimateSystem "ProxyEstimateSystem.cpp" "ProxyEstimateSystem.h")
+add_executable (ProxyEstimateSystem "ProxyEstimateSystem.cpp" "ProxyEstimateSystem.h" "TruthEstimator.h" "Properties.h" "Rankings.h")
+target_link_libraries(ProxyEstimateSystem PRIVATE arrow_shared)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ProxyEstimateSystem PROPERTY CXX_STANDARD 20)
