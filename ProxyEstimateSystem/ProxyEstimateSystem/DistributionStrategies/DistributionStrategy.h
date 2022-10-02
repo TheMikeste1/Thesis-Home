@@ -1,24 +1,25 @@
-/*
-from abc import ABCMeta, abstractmethod
+#pragma once
 
-import numpy as np
+#include <random>
 
-from ..seedable import Seedable
+class DistributionStrategy
+{
+protected:
+   std::default_random_engine machine = std::default_random_engine();
+   
+public:
+   DistributionStrategy() = default;
+   DistributionStrategy(unsigned int seed)
+   {
+      this->seed(seed);
+   }
+   virtual ~DistributionStrategy() = default;
 
 
-# I don't actually need ABCMeta since Seedable is an ABC, but I feel leaving
-# it in helps to make it clear that this is an abstract class.
-class DistributionStrategy(Seedable, metaclass=ABCMeta):
-    def __init__(self, seed: int = None):
-        if seed is not None:
-            self._machine = np.random.default_rng(seed=seed)
-        else:
-            self._machine = np.random.default_rng()
+   virtual double getValue(double min, double max) = 0;
 
-    def set_seed(self, seed: int):
-        self._machine = np.random.default_rng(seed=seed)
-
-    @abstractmethod
-    def get_value(self, minimum: float, maximum: float) -> float:
-        pass
-*/
+   void seed(unsigned int seed)
+   {
+      machine.seed(seed);
+   }
+};
