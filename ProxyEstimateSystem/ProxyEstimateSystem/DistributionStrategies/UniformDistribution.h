@@ -1,12 +1,19 @@
-/*
-from .distribution_strategy import DistributionStrategy
+#pragma once
 
+#include <random>
+#include "DistributionStrategy.h"
 
-class UniformDistribution(DistributionStrategy):
-    def __init__(self, seed: int = None):
-        super().__init__(seed)
+class UniformDistribution : public DistributionStrategy
+{
+private:
+   std::uniform_real_distribution<double> distribution = std::uniform_real_distribution<double>(0, 1);
 
-    def get_value(self, minimum: float, maximum: float) -> float:
-        val = self._machine.uniform(minimum, maximum)
-        return val
-*/
+public:
+   UniformDistribution() = default;
+   UniformDistribution(unsigned int seed) : DistributionStrategy(seed) {}
+
+   double getValue(double min, double max) override
+   {
+      return distribution(machine) * (max - min) + min;
+   }
+};
