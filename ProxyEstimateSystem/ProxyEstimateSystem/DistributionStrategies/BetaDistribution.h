@@ -7,16 +7,21 @@ private:
    std::gamma_distribution<double> distributionX;
    std::gamma_distribution<double> distributionY;
 
-public:
-   BetaDistribution(double alpha, double beta)
+   void _init(double alpha, double beta)
    {
       distributionX = std::gamma_distribution<double>(alpha, 1);
       distributionY = std::gamma_distribution<double>(beta, 1);
    }
 
-   BetaDistribution(double alpha, double beta, unsigned int seed) : BetaDistribution(alpha, beta)
+public:
+   BetaDistribution(double alpha, double beta)
    {
-      this->seed(seed);
+      _init(alpha, beta);
+   }
+
+   BetaDistribution(double alpha, double beta, unsigned int seed) : DistributionStrategy(seed)
+   {
+      _init(alpha, beta);
    }
 
    double getValue(double min, double max) override
