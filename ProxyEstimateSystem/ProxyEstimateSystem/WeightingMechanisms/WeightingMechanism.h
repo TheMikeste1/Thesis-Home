@@ -1,16 +1,10 @@
-/*
-from __future__ import annotations
+#pragma once
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+#include <vector>
+#include "../Rankings.h"
 
-if TYPE_CHECKING:
-    from proxy_estimate_system import Rankings, TruthEstimator
-
-
-class WeightingMechanism(ABC):
-    @abstractmethod
-    def apply_weights(self, agent: TruthEstimator, proxies: [TruthEstimator]) \
-            -> Rankings:
-        pass
-*/
+class WeigtingMechanism
+{
+public:
+   virtual Rankings applyWeights(TruthEstimator* agent, std::vector<TruthEstimator*> proxies) = 0;
+};
