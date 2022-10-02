@@ -1,25 +1,38 @@
-/*
-from __future__ import annotations
+#pragma once
 
-from typing import TYPE_CHECKING
+#include <algorithm>
 
-from .weighting_mechanism import WeightingMechanism
+#include "WeightingMechanism.h"
 
-from ..rankings import Rankings
+class ClosestMechanism : public WeightingMechanism
+{
+public:
+   Rankings applyWeights(TruthEstimator* agent, std::vector<TruthEstimator*> proxies) override
+   {
+      auto ret = Rankings();
 
-if TYPE_CHECKING:
-    from ..truth_estimator import TruthEstimator
+      if (proxies.empty())
+      {
+         return ret;
+      }
 
+      // Sort the proxies by position
+      std::sort(
+         proxies.begin(),
+         proxies.end(),
+         [agent](TruthEstimator* a, TruthEstimator* b) {
+            return abs(agent->lastEstimate - a->lastEstimate)
+               < abs(agent->lastEstimate - b->lastEstimate);
+         }
+      );
 
-class ClosestMechanism(WeightingMechanism):
-    def apply_weights(self, agent: TruthEstimator,
-                      proxies: [TruthEstimator]) -> Rankings:
-        sorted_ = sorted(proxies,
-                         key=lambda p:
-                         abs(p.last_estimate - agent.last_estimate))
-        ret = Rankings()
-        ret.add_ranking(1, sorted_[0])
-        for proxy in sorted_[1:]:
-            ret.add_ranking(0, proxy)
-        return ret
-*/
+      auto it = proxies.begin();
+      ret.insert(*it, 1);
+      while (++it != proxies.end())
+      {
+         ret.insert(*it, 0);
+      }
+
+      return ret;
+   }
+};
