@@ -7,7 +7,7 @@
 
 #include "Utilities.h"
 #include "Rankings.h"
-#include "DistributionStrategies\GaussianDistribution.h"
+#include "DistributionStrategies\BetaDistribution.h"
 
 
 using namespace std;
@@ -30,14 +30,15 @@ void loadingThingy()
 
 int main()
 {
-   GaussianDistribution strategy(1561651);
+   BetaDistribution strategy(0.3, 0.3);
    double min = INFINITY;
    double max = -INFINITY;
    int countInRange = 0;
-   const int count = 10000;
+   const int count = 100000;
+   int p[100] = {};
    for (int i = 0; i < count; ++i)
    {
-      double value = strategy.getValue(0, 1);
+      double value = strategy.getValue(0, 100);
 
       if (value < min)
       {
@@ -48,15 +49,22 @@ int main()
          max = value;
       }
 
-      if (value >= 0 && value <= 1)
+      if (value >= 0 && value < 100)
       {
          ++countInRange;
+         p[(int)value]++;
       }
 
-      cout << value << endl;
+      // cout << value << endl;
    }
 
-   cout << min << " to " << max << endl;
+   cout << endl << "p: " << endl;
+   for (int i = 0; i < 100; ++i) {
+      std::cout << i << "-" << (i + 1) << ": ";
+      std::cout << std::string(p[i] * count / count, '*') << std::endl;
+   }
+
+   cout << endl << min << " to " << max << endl;
    cout << countInRange << " in range (" << double(countInRange) / count * 100 << "%)" << endl;
 
    return 0;

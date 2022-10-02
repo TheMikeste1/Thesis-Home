@@ -1,36 +1,31 @@
-/*
-from .distribution_strategy import DistributionStrategy
+#pragma once
+#include "DistributionStrategy.h"
 
+class BetaDistribution : public DistributionStrategy
+{
+private:
+   std::gamma_distribution<double> distributionX;
+   std::gamma_distribution<double> distributionY;
 
-class BetaDistribution(DistributionStrategy):
-    def __init__(self, a: float, b: float, seed: int = None):
-        super().__init__(seed)
-        self._a = a
-        self._b = b
+public:
+   BetaDistribution(double alpha, double beta)
+   {
+      distributionX = std::gamma_distribution<double>(alpha, 1);
+      distributionY = std::gamma_distribution<double>(beta, 1);
+   }
 
-    def get_value(self, minimum: float, maximum: float) -> float:
-        val = self._machine.beta(self._a, self._b)
-        return val * (maximum - minimum) + minimum
+   BetaDistribution(double alpha, double beta, unsigned int seed) : BetaDistribution(alpha, beta)
+   {
+      this->seed(seed);
+   }
 
-    @property
-    def a(self) -> float:
-        return self._a
+   double getValue(double min, double max) override
+   {
+      // https://stackoverflow.com/a/10359049/10078500
+      double x = distributionX(machine);
+      double y = distributionY(machine);
 
-    @property
-    def b(self) -> float:
-        return self._b
-
-    @a.setter
-    def a(self, a: float):
-        self._a = a
-
-    @b.setter
-    def b(self, b: float):
-        self._b = b
-
-    def __str__(self):
-        return f"BetaDistribution(a={self._a}, b={self._b})"
-
-    def __repr__(self):
-        return self.__str__()
-*/
+      double z = x / (x + y);
+      return z * (max - min) + min;  // Scale to [min, max]
+   }
+};
