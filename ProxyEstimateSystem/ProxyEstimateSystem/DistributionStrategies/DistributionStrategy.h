@@ -8,7 +8,11 @@ protected:
    std::default_random_engine machine = std::default_random_engine();
    
 public:
-   DistributionStrategy() = default;
+   DistributionStrategy()
+   {
+      this->seed(time(NULL));
+   }
+
    DistributionStrategy(unsigned int seed)
    {
       this->seed(seed);
