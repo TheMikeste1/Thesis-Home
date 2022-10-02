@@ -7,6 +7,7 @@
 
 #include "Utilities.h"
 #include "Rankings.h"
+#include "DistributionStrategies\GaussianDistribution.h"
 
 
 using namespace std;
@@ -29,13 +30,34 @@ void loadingThingy()
 
 int main()
 {
-   Rankings rankings;
-   rankings.insert(nullptr, 1.0);
-
-   for (const auto& ranking : rankings)
+   GaussianDistribution strategy(1561651);
+   double min = INFINITY;
+   double max = -INFINITY;
+   int countInRange = 0;
+   const int count = 10000;
+   for (int i = 0; i < count; ++i)
    {
-      cout << ranking.weight << endl;
+      double value = strategy.getValue(0, 1);
+
+      if (value < min)
+      {
+         min = value;
+      }
+      if (value > max)
+      {
+         max = value;
+      }
+
+      if (value >= 0 && value <= 1)
+      {
+         ++countInRange;
+      }
+
+      cout << value << endl;
    }
+
+   cout << min << " to " << max << endl;
+   cout << countInRange << " in range (" << double(countInRange) / count * 100 << "%)" << endl;
 
    return 0;
 }
