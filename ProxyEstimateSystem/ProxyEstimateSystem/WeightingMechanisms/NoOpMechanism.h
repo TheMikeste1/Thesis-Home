@@ -1,18 +1,12 @@
-/*
-from __future__ import annotations
+#pragma once
 
-from typing import TYPE_CHECKING
+#include "WeightingMechanism.h"
 
-from .weighting_mechanism import WeightingMechanism
-from ..rankings import Rankings
-
-
-if TYPE_CHECKING:
-    from proxy_estimate_system import TruthEstimator
-
-
-class NoOpMechanism(WeightingMechanism):
-    def apply_weights(self, agent: TruthEstimator,
-                      proxies: [TruthEstimator]) -> Rankings:
-        return Rankings()
-*/
+class NoOpMechanism : public WeightingMechanism
+{
+public:
+   Rankings applyWeights(TruthEstimator* agent, std::vector<TruthEstimator*> proxies) override
+   {
+      return Rankings();
+   }
+};
