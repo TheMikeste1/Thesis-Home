@@ -8,7 +8,7 @@
 #include "Utilities.h"
 #include "Rankings.h"
 #include "DistributionStrategies\BetaDistribution.h"
-
+#include "WeightingMechanisms\ClosestMechanism.h"
 
 using namespace std;
 
