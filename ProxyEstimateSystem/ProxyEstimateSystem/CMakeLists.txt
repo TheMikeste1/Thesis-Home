@@ -20,7 +20,10 @@ target_sources(ProxyEstimateSystem PRIVATE
 
 # Distribution Strategies
 add_subdirectory("DistributionStrategies")
-
+# Voting Mechanisms
+add_subdirectory("VotingMechanisms")
+# Weighting Mechanisms
+add_subdirectory("WeightingMechanisms")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ProxyEstimateSystem PROPERTY CXX_STANDARD 20)
