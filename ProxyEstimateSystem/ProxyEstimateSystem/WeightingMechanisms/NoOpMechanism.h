@@ -4,8 +4,8 @@
 
 class NoOpMechanism : public WeightingMechanism
 {
-public:
-   Rankings applyWeights(TruthEstimator* agent, std::vector<TruthEstimator*> proxies) override
+private:
+   Rankings _applyWeights(TruthEstimator* agent, std::vector<TruthEstimator*>& orderedProxies) override
    {
       return Rankings();
    }
