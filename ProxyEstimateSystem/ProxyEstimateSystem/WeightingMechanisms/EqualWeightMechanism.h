@@ -1,23 +1,19 @@
-/*
-from __future__ import annotations
+#pragma once
 
-from typing import TYPE_CHECKING
+#include "WeightingMechanism.h"
 
-from .weighting_mechanism import WeightingMechanism
-from ..rankings import Rankings
-from ..ranking_item import RankingItem
+class EqualWeightMechanism : public WeightingMechanism
+{
+private:
+   Rankings _applyWeights(TruthEstimator* agent, std::vector<TruthEstimator*>& orderedProxies) override
+   {
+      auto ret = Rankings();
 
-if TYPE_CHECKING:
-    from proxy_estimate_system.truth_estimator import TruthEstimator
+      while (++it != orderedProxies.end())
+      {
+         ret.insert(*it, 1);
+      }
 
-
-class EqualWeightMechanism(WeightingMechanism):
-    def apply_weights(self, agent: TruthEstimator, proxies: [TruthEstimator]) \
-            -> Rankings:
-        return Rankings([RankingItem(1, proxy)
-                         for proxy in
-                         sorted(proxies,
-                                key=lambda p: abs(agent.last_estimate
-                                                  - p.last_estimate))
-                         ])
-*/
+      return ret;
+   }
+};
