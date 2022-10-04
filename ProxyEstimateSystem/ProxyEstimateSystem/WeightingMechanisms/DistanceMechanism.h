@@ -32,7 +32,7 @@ private:
                                             }
       )->second;
 
-      // Add all the proxies with the difference fron maxDistance as weight
+      // Add all the proxies with the difference from maxDistance as weight
       it = orderedProxies.begin();
       while (it != orderedProxies.end())
       {
