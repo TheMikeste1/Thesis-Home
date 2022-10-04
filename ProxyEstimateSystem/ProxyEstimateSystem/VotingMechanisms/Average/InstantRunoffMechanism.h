@@ -69,7 +69,7 @@ public:
          {
             auto* agent = pair.first;
             double weight = pair.second;
-            return agent->lastEstimate * weight;
+            return agent->getLastEstimate() * weight;
          }
       );
       delete votes;

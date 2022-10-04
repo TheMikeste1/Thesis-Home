@@ -26,12 +26,12 @@ public:
          proxies,
          [agent](TruthEstimator* a, TruthEstimator* b)
          {
-            return abs(agent->lastEstimate - a->lastEstimate)
-               < abs(agent->lastEstimate - b->lastEstimate);
+            return abs(agent->getLastEstimate() - a->getLastEstimate())
+               < abs(agent->getLastEstimate() - b->getLastEstimate());
          }
       );
       Rankings ret = this->_applyWeights(agent, proxies);
-      assert(ret.Size == proxies.size());
+      assert(ret.size() == proxies.size());
       return ret;
    }
 };

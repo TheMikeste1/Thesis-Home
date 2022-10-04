@@ -8,13 +8,13 @@
 bool Rankings::_rankingInRange(int rank) const
 {
    rank--;
-   return rank >= 0 || rank < this->Size;
+   return rank >= 0 || rank < this->size();
 }
 
 std::vector<Rankings::RankingsItem>::const_iterator
 Rankings::_findAgent(TruthEstimator* proxy) const
 {
-   return std::ranges::find_if(
+   return std::find_if(
       _orderedRankings.begin(),
       _orderedRankings.end(),
       [proxy](const RankingsItem& item) { return item.proxy == proxy; });

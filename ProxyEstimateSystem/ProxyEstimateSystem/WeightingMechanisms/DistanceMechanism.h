@@ -18,7 +18,7 @@ private:
       auto it = orderedProxies.begin();
       while (it != orderedProxies.end())
       {
-         double distance = abs(agent->lastEstimate - (*it)->lastEstimate);
+         double distance = abs(agent->getLastEstimate() - (*it)->getLastEstimate());
          distances.emplace(*it, distance);
          ++it;
       }

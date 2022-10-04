@@ -3,8 +3,6 @@
 #include <vector>
 
 #include "TruthEstimator.h"
-#include "Properties.h"
-
 
 class Rankings
 {
@@ -25,8 +23,7 @@ private:
 public:
    Rankings() = default;
 
-   READONLY_PROPERTY(size_t, Size);
-   GET(Size) const { return this->_orderedRankings.size(); }
+   size_t size() const { return this->_orderedRankings.size(); }
 
    iterator begin() const { return _orderedRankings.cbegin(); }
    iterator end() const { return _orderedRankings.cend(); }

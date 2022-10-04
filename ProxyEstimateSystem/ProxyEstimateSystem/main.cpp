@@ -1,9 +1,10 @@
-﻿// ProxyEstimateSystem.cpp : Defines the entry point for the application.
+// ProxyEstimateSystem.cpp : Defines the entry point for the application.
 //
 
 #include <chrono>
 #include <iostream>
 #include <set>
+#include <thread>
 
 #include "Utilities.h"
 #include "Rankings.h"
@@ -23,7 +24,7 @@ void loadingThingy()
    {
       cout << chars[i] << "\r";
       ++i %= sizeChars;
-      this_thread::sleep_for(chrono::milliseconds(100));
+      std::this_thread::sleep_for(chrono::milliseconds(100));
    }
 }
 
@@ -52,14 +53,15 @@ int main()
       if (value >= 0 && value < 100)
       {
          ++countInRange;
-         p[(int)value]++;
+         p[(int) value]++;
       }
 
       // cout << value << endl;
    }
 
    cout << endl << "p: " << endl;
-   for (int i = 0; i < 100; ++i) {
+   for (int i = 0; i < 100; ++i)
+   {
       std::cout << i << "-" << (i + 1) << ": ";
       std::cout << std::string(p[i] * count / count, '*') << std::endl;
    }

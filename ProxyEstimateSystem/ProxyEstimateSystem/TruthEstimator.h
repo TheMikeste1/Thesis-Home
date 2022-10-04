@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Properties.h"
-
 class TruthEstimator
 {
 protected:
@@ -9,8 +7,7 @@ protected:
    virtual double _generateEstimate(double truth) = 0;
 
 public:
-   READONLY_PROPERTY(double, lastEstimate);
-   GET(lastEstimate)
+   double getLastEstimate() const
    {
       return _lastEstimate;
    }
