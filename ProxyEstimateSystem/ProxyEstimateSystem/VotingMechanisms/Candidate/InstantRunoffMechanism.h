@@ -1,39 +1,72 @@
+#pragma once
+
+#include <map>
+
+#include "../VotingMechanism.h"
+
 /*
-from __future__ import annotations
+ * Ignores weights. Uses instant runoff to eliminate proxies until some
+ * proxy has the majority, then returns its vote.
+ */
+class InstantRunoffMechanism : VotingMechanism
+{
+private:
+   [[nodiscard]] static std::map<TruthEstimator*, int>*
+   _countVotes(const std::map<InactiveVoter*, Rankings>& rankings)
+   {
+      auto* ret = new std::map<TruthEstimator*, int>();
 
-from collections import Counter
-from typing import TYPE_CHECKING
+      for (const auto& [_, ranking]: rankings)
+      {
+         auto* estimator = ranking.agentRanked(1);
+         if (ret->find(estimator) != ret->end())
+            (*ret)[estimator] = 0;
+         (*ret)[estimator] += 1;
+      }
 
-from ..voting_mechanism import VotingMechanism
+      return ret;
+   }
 
-if TYPE_CHECKING:
-    from proxy_estimate_system import InactiveVoter, Rankings, TruthEstimator
+public:
+   double solve(
+         const std::vector<TruthEstimator*>& proxies,
+         const std::vector<InactiveVoter*>& inactive,
+         const std::map<InactiveVoter*, Rankings>& rankings
+   ) const override
+   {
+      auto totalVotes = float(inactive.size());
+      std::map<TruthEstimator*, int>* votes = _countVotes(rankings);
+      TruthEstimator* maxVoteProxy = std::max_element(
+            votes->begin(), votes->end(),
+            [](const auto& a, const auto& b) {
+               return a.second < b.second;
+            }
+      )->first;
 
+      std::map<InactiveVoter*, Rankings> remainingRankings(rankings);
+      while (float(votes->at(maxVoteProxy)) < totalVotes / 2)
+      {
+         TruthEstimator* minVoteProxy = std::min_element(
+               votes->begin(), votes->end(),
+               [](const auto& a, const auto& b) {
+                  return a.second < b.second;
+               }
+         )->first;
+         // Remove the proxy with the least votes
+         for (auto& [_, ranking]: remainingRankings)
+            ranking.removeAgent(minVoteProxy);
+         // Recount the votes
+         delete votes;
+         votes = _countVotes(remainingRankings);
+         maxVoteProxy = std::max_element(
+               votes->begin(), votes->end(),
+               [](const auto& a, const auto& b) {
+                  return a.second < b.second;
+               }
+         )->first;
+      }
 
-class InstantRunoffMechanism(VotingMechanism):
-    """
-        Ignores weights. Uses instant runoff to eliminate proxies until some
-        proxy has the majority, returning its estimate.
-        """
-
-    def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
-              rankings: dict[InactiveVoter, Rankings]) -> float:
-        total_votes = len(inactive)
-        votes = self.__count_votes(rankings)
-        max_vote_proxy = max(votes, key=votes.get)
-
-        while votes[max_vote_proxy] < total_votes / 2:
-            min_vote_proxy = min(votes, key=votes.get)
-            for ranking in rankings.values():
-                ranking.remove_agent(min_vote_proxy)
-            votes = self.__count_votes(rankings)
-            max_vote_proxy = max(votes, key=votes.get)
-
-        return max_vote_proxy.last_estimate
-
-    @staticmethod
-    def __count_votes(rankings) -> dict[TruthEstimator, int]:
-        votes = Counter([ranking.agent_ranked(1)
-                         for ranking in rankings.values()])
-        return votes
-   */
+      delete votes;
+      return maxVoteProxy->getLastEstimate();
+   }
+};
