@@ -1,22 +1,24 @@
-/*
-from __future__ import annotations
+#pragma once
 
-from typing import TYPE_CHECKING
+#include <map>
 
-from ..voting_mechanism import VotingMechanism
+#include "../VotingMechanism.h"
 
-if TYPE_CHECKING:
-    from proxy_estimate_system import InactiveVoter, Rankings, TruthEstimator
-
-
-class PluralityMechanism(VotingMechanism):
-    """
-    Simply returns the estimate the proxy with the highest number of weight.
-    """
-
-    def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
-              rankings: dict[InactiveVoter, Rankings]) -> float:
-        proxy_weights, _ = self._sum_proxy_weights(rankings)
-
-        return max(proxy_weights, key=proxy_weights.get).last_estimate
-      */
+class PluralityMechanism : public VotingMechanism
+{
+public:
+   double solve(
+         const std::vector<TruthEstimator*>& proxies,
+         const std::vector<InactiveVoter*>& inactive,
+         const std::map<InactiveVoter*, Rankings>& rankings
+   ) const override
+   {
+      auto* proxyWeights = _sumProxyWeights(rankings);
+      return std::max_element(
+            proxyWeights->weights.begin(), proxyWeights->weights.end(),
+            [](const auto& lhs, const auto& rhs) {
+               return lhs.second < rhs.second;
+            }
+      )->first->getLastEstimate();
+   }
+};
