@@ -1,51 +1,104 @@
+#pragma once
+
+#include <algorithm>
+
+#include <map>
+
+#include "../VotingMechanism.h"
+
 /*
-from __future__ import annotations
+ *  Uses instant runoff until some proxy has the majority, then averages
+ *  using the votes as weights.
+ *  The total weight in a ranking serves as the number of votes for the
+ *  ranking's first choice.
+ */
+class WeightedInstantRunoffMechanism : VotingMechanism
+{
+private:
+   static PartitionedWeights* _sumInactiveWeights(
+         const std::map<InactiveVoter*, Rankings>& rankings
+   )
+   {
+      auto* ret = new PartitionedWeights();
 
-from collections import defaultdict
-from typing import TYPE_CHECKING
+      // Iterate through the Rankings, summing the weight for each proxy
+      // and incrementing the system weight.
+      for (auto& [inactiveVoter, ranking]: rankings)
+      {
+         auto* voter = (TruthEstimator*) (inactiveVoter);
+         for (auto& rank: ranking)
+         {
+            ret->systemWeight += rank.weight;
+            ret->weights[voter] += rank.weight;
+         }
+      }
 
-from ..voting_mechanism import VotingMechanism
+      return ret;
+   }
 
-if TYPE_CHECKING:
-    from proxy_estimate_system import InactiveVoter, Rankings, TruthEstimator
+public:
+   double solve(
+         const std::vector<TruthEstimator*>& proxies,
+         const std::vector<InactiveVoter*>& inactive,
+         const std::map<InactiveVoter*, Rankings>& rankings
+   ) const override
+   {
+      // Get the weights for each inactive voter
+      // so we can apply it to their first choice
+      auto* partitionedWeights = _sumInactiveWeights(rankings);
+      double systemWeight = partitionedWeights->systemWeight;
 
+      // Calculate the weight for each proxy
+      std::map<TruthEstimator*, double> votes;
+      for (auto& [inactiveVoter, ranking]: rankings)
+      {
+         auto* voter = (TruthEstimator*) (inactiveVoter);
+         auto* proxy = ranking.agentRanked(1);
+         votes[proxy] += partitionedWeights->weights[voter];
+      }
 
-class WeightedInstantRunoffMechanism(VotingMechanism):
-    """
-        Uses instant runoff until some proxy has the majority, then returns its
-        estimate.
-        The total weight in a ranking serves as the number of votes for the
-        ranking's first choice.
-        """
+      TruthEstimator* maxVoteProxy = std::max_element(
+            votes.begin(), votes.end(),
+            [](const auto& a, const auto& b) {
+               return a.second < b.second;
+            }
+      )->first;
 
-    def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
-              rankings: dict[InactiveVoter, Rankings]) -> float:
-        total_weight_per_voter = {voter: sum(rank.weight for rank in ranking)
-                                  for voter, ranking in rankings.items()}
-        total_weight = sum(total_weight_per_voter.values())
+      // Run instant runoff until a proxy has the majority of the weight
+      std::map<InactiveVoter*, Rankings> remainingRankings(rankings);
+      while (votes.at(maxVoteProxy) < systemWeight / 2)
+      {
+         TruthEstimator* minVoteProxy = std::min_element(
+               votes.begin(), votes.end(),
+               [](const auto& a, const auto& b) {
+                  return a.second < b.second;
+               }
+         )->first;
+         // Remove the proxy with the least votes
+         for (auto& [inactiveVoter, ranking]: remainingRankings)
+         {
+            int removedRank = ranking.rankFor(minVoteProxy);
+            ranking.removeRanking(removedRank);
+            // If this was the first choice,
+            // push their weight to their next choice
+            if (removedRank == 1)
+            {
+               auto* voter = (TruthEstimator*) (inactiveVoter);
+               auto* newChoiceAgent = ranking.agentRanked(1);
+               votes[newChoiceAgent] += partitionedWeights->weights.at(voter);
+            }
+         }
+         votes.erase(minVoteProxy);
 
-        # Calculate the weight per proxy
-        # Those without any first-place votes are automatically
-        # eliminated since they would have no weight anyway
-        votes = defaultdict(float)
-        for voter, weight in total_weight_per_voter.items():
-            proxy = rankings[voter].agent_ranked(1)
-            votes[proxy] += weight
+         // Recount the votes
+         maxVoteProxy = std::max_element(
+               votes.begin(), votes.end(),
+               [](const auto& a, const auto& b) {
+                  return a.second < b.second;
+               }
+         )->first;
+      }
 
-        max_vote_proxy = max(votes, key=votes.get)
-        while votes[max_vote_proxy] < total_weight / 2:
-            min_vote_proxy = min(votes, key=votes.get)
-            for voter, ranking in rankings.items():
-                removed_rank = ranking.rank_for(min_vote_proxy)
-                ranking.remove_ranking(removed_rank)
-                # If this was the first choice,
-                # push their weight to their next choice
-                if removed_rank == 1:
-                    new_choice_agent = ranking.agent_ranked(1)
-                    votes[new_choice_agent] += total_weight_per_voter[voter]
-
-            del votes[min_vote_proxy]
-            max_vote_proxy = max(votes, key=votes.get)
-
-        return max_vote_proxy.last_estimate
-*/
+      return maxVoteProxy->getLastEstimate();
+   }
+};
