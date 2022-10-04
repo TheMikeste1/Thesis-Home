@@ -1,7 +1,6 @@
-#include "Rankings.h"
-
 #include <cassert>
 
+#include "Rankings.h"
 #include "Utilities.h"
 
 
@@ -15,9 +14,9 @@ std::vector<Rankings::RankingsItem>::const_iterator
 Rankings::_findAgent(TruthEstimator* proxy) const
 {
    return std::find_if(
-      _orderedRankings.begin(),
-      _orderedRankings.end(),
-      [proxy](const RankingsItem& item) { return item.proxy == proxy; });
+         _orderedRankings.begin(),
+         _orderedRankings.end(),
+         [proxy](const RankingsItem& item) { return item.proxy == proxy; });
 }
 
 TruthEstimator* Rankings::agentRanked(int ranking) const
@@ -31,12 +30,11 @@ void Rankings::insert(TruthEstimator* proxy, double weight)
    this->removeAgent(proxy);
 
    binaryInsert<RankingsItem>(
-      this->_orderedRankings,
-      { proxy, weight },
-      [](const RankingsItem& a, const RankingsItem& b) -> bool
-      {
-         return a.weight < b.weight;
-      }
+         this->_orderedRankings,
+         {proxy, weight},
+         [](const RankingsItem& a, const RankingsItem& b) -> bool {
+            return a.weight < b.weight;
+         }
    );
 }
 
@@ -44,8 +42,8 @@ int Rankings::rankFor(TruthEstimator* proxy) const
 {
    const auto loc = this->_findAgent(proxy);
    return loc == this->_orderedRankings.end()
-      ? -1
-      : loc - this->_orderedRankings.begin() + 1;
+          ? -1
+          : int(loc - this->_orderedRankings.begin() + 1);
 }
 
 void Rankings::removeAgent(TruthEstimator* proxy)

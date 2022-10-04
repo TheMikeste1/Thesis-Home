@@ -8,7 +8,8 @@
 class DistanceMechanism : public WeightingMechanism
 {
 private:
-   Rankings _applyWeights(TruthEstimator* agent, std::vector<TruthEstimator*>& orderedProxies) override
+   Rankings _applyWeights(TruthEstimator* agent,
+                          std::vector<TruthEstimator*>& orderedProxies) override
    {
       auto ret = Rankings();
 
@@ -25,14 +26,14 @@ private:
 
       // Find the max distance
       double maxDistance = std::max_element(distances.begin(), distances.end(),
-         [](const std::pair<TruthEstimator*, double>& p1, const std::pair<TruthEstimator*, double>& p2)
-         {
-            return p1.second < p2.second;
-         }
+                                            [](const std::pair<TruthEstimator*, double>& p1,
+                                               const std::pair<TruthEstimator*, double>& p2) {
+                                               return p1.second < p2.second;
+                                            }
       )->second;
 
       // Add all the proxies with the difference fron maxDistance as weight
-      auto it = orderedProxies.begin();
+      it = orderedProxies.begin();
       while (it != orderedProxies.end())
       {
          double distance = distances[*it];

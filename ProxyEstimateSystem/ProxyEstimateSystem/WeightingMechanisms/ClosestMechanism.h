@@ -5,7 +5,8 @@
 class ClosestMechanism : public WeightingMechanism
 {
 private:
-   Rankings _applyWeights(TruthEstimator* agent, std::vector<TruthEstimator*>& orderedProxies) override
+   Rankings _applyWeights(TruthEstimator* agent,
+                          std::vector<TruthEstimator*>& orderedProxies) override
    {
       auto ret = Rankings();
       auto it = orderedProxies.begin();

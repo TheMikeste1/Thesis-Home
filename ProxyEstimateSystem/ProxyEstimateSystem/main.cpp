@@ -1,4 +1,4 @@
-// ProxyEstimateSystem.cpp : Defines the entry point for the application.
+﻿// ProxyEstimateSystem.cpp : Defines the entry point for the application.
 //
 
 #include <chrono>
@@ -9,12 +9,12 @@
 #include "Utilities.h"
 #include "Rankings.h"
 #include "DistributionStrategies\BetaDistribution.h"
-#include "WeightingMechanisms\ClosestMechanism.h"
+#include "VotingMechanisms\Average\MeanMechanism.h"
 
 using namespace std;
 
 
-void loadingThingy()
+[[noreturn]] void loadingThingy()
 {
    const char chars[8] = {'|', '/', '-', '\\', '|', '/', '-', '\\',};
    const size_t sizeChars = std::size(chars);
@@ -67,7 +67,8 @@ int main()
    }
 
    cout << endl << min << " to " << max << endl;
-   cout << countInRange << " in range (" << double(countInRange) / count * 100 << "%)" << endl;
+   cout << countInRange << " in range (" << double(countInRange) / count * 100 << "%)"
+        << endl;
 
    return 0;
 }

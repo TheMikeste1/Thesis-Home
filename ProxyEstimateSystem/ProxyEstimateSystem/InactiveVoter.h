@@ -46,7 +46,6 @@ class InactiveVoter(TruthEstimator):
         return f'InactiveVoter(estimator={self.__estimator}, ' \
                f'weighting_mechanism={self.__weighting_mechanism}) '
 */
-class InactiveVoter
+class InactiveVoter : public TruthEstimator
 {
-   
 };

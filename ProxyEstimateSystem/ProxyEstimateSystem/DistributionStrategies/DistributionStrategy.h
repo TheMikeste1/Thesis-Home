@@ -5,15 +5,15 @@
 class DistributionStrategy
 {
 protected:
-   std::default_random_engine machine = std::default_random_engine();
+   std::default_random_engine machine = std::default_random_engine(); // NOLINT(cert-msc51-cpp)
    
 public:
    DistributionStrategy()
    {
-      this->seed(time(NULL));
+      this->seed(time(nullptr));
    }
 
-   DistributionStrategy(unsigned int seed)
+   explicit DistributionStrategy(unsigned int seed)
    {
       this->seed(seed);
    }
