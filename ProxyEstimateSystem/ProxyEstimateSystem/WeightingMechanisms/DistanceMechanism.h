@@ -1,31 +1,45 @@
-/*
-from __future__ import annotations
+#pragma once
 
-from typing import TYPE_CHECKING
+#include <algorithm>
+#include <map>
 
-from .weighting_mechanism import WeightingMechanism
-from ..rankings import Rankings
-from ..ranking_item import RankingItem
+#include "WeightingMechanism.h"
 
-if TYPE_CHECKING:
-    from proxy_estimate_system import TruthEstimator
+class DistanceMechanism : public WeightingMechanism
+{
+private:
+   Rankings _applyWeights(TruthEstimator* agent, std::vector<TruthEstimator*>& orderedProxies) override
+   {
+      auto ret = Rankings();
 
+      // Calculate all the distances
+      // Create a map to hold the distances for each truth estimator
+      std::map<TruthEstimator*, double> distances;
+      auto it = orderedProxies.begin();
+      while (it != orderedProxies.end())
+      {
+         double distance = abs(agent->lastEstimate - (*it)->lastEstimate);
+         distances.emplace(*it, distance);
+         ++it;
+      }
 
-class DistanceMechanism(WeightingMechanism):
-    def apply_weights(self, agent: TruthEstimator,
-                      proxies: [TruthEstimator]) -> Rankings:
-        if len(proxies) == 1:
-            return Rankings([RankingItem(1, proxies[0])])
+      // Find the max distance
+      double maxDistance = std::max_element(distances.begin(), distances.end(),
+         [](const std::pair<TruthEstimator*, double>& p1, const std::pair<TruthEstimator*, double>& p2)
+         {
+            return p1.second < p2.second;
+         }
+      )->second;
 
-        distances = {proxy: abs(proxy.last_estimate - agent.last_estimate)
-                     for proxy in proxies}
-        max_distance = max(distances.values())
+      // Add all the proxies with the difference fron maxDistance as weight
+      auto it = orderedProxies.begin();
+      while (it != orderedProxies.end())
+      {
+         double distance = distances[*it];
+         ret.insert(*it, maxDistance - distance);
+         ++it;
+      }
 
-        # Flip ordering of distances so that the closest proxy has the highest
-        # weight
-        weights = {proxy: max_distance - dist
-                   for proxy, dist in distances.items()}
-        ret = Rankings([RankingItem(weight, proxy)
-                        for proxy, weight in weights.items()])
-        return ret
-*/
+      return ret;
+   }
+};
