@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cassert>
 #include <vector>
 
 #include "../Rankings.h"
@@ -29,6 +30,8 @@ public:
                < abs(agent->lastEstimate - b->lastEstimate);
          }
       );
-      return this->_applyWeights(agent, proxies);
+      Rankings ret = this->_applyWeights(agent, proxies);
+      assert(ret.Size == proxies.size());
+      return ret;
    }
 };
