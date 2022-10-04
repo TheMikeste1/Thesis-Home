@@ -9,9 +9,9 @@ private:
    {
       auto ret = Rankings();
 
-      while (++it != orderedProxies.end())
+      for (auto proxy : orderedProxies)
       {
-         ret.insert(*it, 1);
+         ret.insert(proxy, 1);
       }
 
       return ret;
