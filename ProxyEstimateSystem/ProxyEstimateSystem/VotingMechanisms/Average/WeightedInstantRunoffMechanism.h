@@ -101,6 +101,8 @@ public:
          )->first;
       }
 
+      delete partitionedWeights;
+
       // Calculate the weighted average
       std::vector<double> appliedWeights;
       std::transform(

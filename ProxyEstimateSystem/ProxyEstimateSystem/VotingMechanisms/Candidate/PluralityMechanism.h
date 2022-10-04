@@ -14,11 +14,13 @@ public:
    ) const override
    {
       auto* proxyWeights = _sumProxyWeights(rankings);
-      return std::max_element(
+      double ret = std::max_element(
             proxyWeights->weights.begin(), proxyWeights->weights.end(),
             [](const auto& lhs, const auto& rhs) {
                return lhs.second < rhs.second;
             }
       )->first->getLastEstimate();
+      delete proxyWeights;
+      return ret;
    }
 };

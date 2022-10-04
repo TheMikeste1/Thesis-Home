@@ -90,6 +90,7 @@ public:
          }
          votes.erase(minVoteProxy);
 
+
          // Recount the votes
          maxVoteProxy = std::max_element(
                votes.begin(), votes.end(),
@@ -99,6 +100,7 @@ public:
          )->first;
       }
 
+      delete partitionedWeights;
       return maxVoteProxy->getLastEstimate();
    }
 };
