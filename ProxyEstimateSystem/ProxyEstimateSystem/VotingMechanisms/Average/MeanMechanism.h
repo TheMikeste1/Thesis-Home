@@ -1,22 +1,41 @@
-/*
-from __future__ import annotations
+#pragma once
 
-from typing import TYPE_CHECKING
+#include <algorithm>
+#include <iterator>
+#include <numeric>
 
-from ..voting_mechanism import VotingMechanism
+#include "../VotingMechanism.h"
 
-if TYPE_CHECKING:
-    from proxy_estimate_system import InactiveVoter, Rankings, TruthEstimator
+class MeanMechanism : VotingMechanism
+{
+public:
+   double solve(
+      const std::vector<TruthEstimator*>& proxies,
+      const std::vector<InactiveVoter*>& inactive,
+      const std::map<InactiveVoter*, Rankings>& rankings
+   )
+   {
+      auto* weights = _sumProxyWeights(rankings);
 
+      const double systemWeight = weights->systemWeight;
 
-class MeanMechanism(VotingMechanism):
-    """Calculates the mean of the weighted proxy estimates."""
+      std::vector<double> appliedWeights;
+      std::ranges::transform(
+         weights->proxyWeights,
+         std::back_inserter(appliedWeights),
+         [](const auto& pair)
+         {
+            auto* agent = pair.first;
+            double weight = pair.second;
+            return agent->lastEstimate * weight;
+         }
+      );
+      delete weights;
 
-    def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
-              rankings: dict[InactiveVoter, Rankings]) -> float:
-        proxy_weights, system_weight = self._sum_proxy_weights(rankings)
-
-        return (sum(proxy.last_estimate * weight
-                    for proxy, weight in proxy_weights.items())
-                / system_weight)
-*/
+      return std::accumulate(
+         appliedWeights.begin(),
+         appliedWeights.end(),
+         static_cast<double>(0)
+      ) / systemWeight;
+   }
+};
