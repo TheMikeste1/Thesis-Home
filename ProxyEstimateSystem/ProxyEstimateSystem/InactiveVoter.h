@@ -40,4 +40,9 @@ public:
    {
       _weightingMechanism = weightingMechanism;
    }
+
+   Rankings weight(const std::vector<TruthEstimator*>& proxies) const
+   {
+      return _weightingMechanism->applyWeights((TruthEstimator*) this, proxies);
+   }
 };

@@ -1,60 +1,56 @@
-/*
-from random import Random
+#pragma once
 
-from typing import Collection
+#include <cmath>
+#include <utility>
 
-from .inactive_voter import InactiveVoter
-from .rankings import Rankings
-from .truth_estimator import TruthEstimator
-from .voting_mechanisms.voting_mechanism import VotingMechanism
+#include "InactiveVoter.h"
+#include "Rankings.h"
+#include "TruthEstimator.h"
+#include "VotingMechanisms/VotingMechanism.h"
 
+class ProxySystem : public TruthEstimator
+{
+private:
+   static const unsigned int RANDOM_SEED_EXTENT = UINT_MAX;
 
-class ProxySystem(TruthEstimator):
-    __random_seed_extent = 2 ** 64
+   std::vector<TruthEstimator*> _proxies;
+   std::vector<InactiveVoter*> _voters;
+   VotingMechanism* _votingMechanism;
 
-    def __init__(self, proxies: Collection[TruthEstimator],
-                 voters: Collection[InactiveVoter],
-                 voting_mechanism: VotingMechanism,
-                 seed: int = None):
-        self.__proxies = proxies
-        self.__voters = voters
-        self.__voting_mechanism = voting_mechanism
-        if seed is not None:
-            self.set_seed(seed)
+protected:
+   static void
+   _updateAgentsEstimates(const std::vector<TruthEstimator*>& agents, double truth);
 
-    @property
-    def proxies(self) -> Collection[TruthEstimator]:
-        return self.__proxies
+   double _generateEstimate(double truth) override;
 
-    @property
-    def voters(self) -> Collection[InactiveVoter]:
-        return self.__voters
+   std::map<InactiveVoter*, Rankings>* _generateWeights();
 
-    @property
-    def voting_mechanism(self) -> VotingMechanism:
-        return self.__voting_mechanism
+public:
+   ProxySystem(std::vector<TruthEstimator*> proxies, std::vector<InactiveVoter*> voters,
+               VotingMechanism* votingMechanism)
+   {
+      this->_proxies = std::move(proxies);
+      this->_voters = std::move(voters);
+      this->_votingMechanism = votingMechanism;
+   }
 
-    @voting_mechanism.setter
-    def voting_mechanism(self, votingMechanism: VotingMechanism):
-        self.__voting_mechanism = votingMechanism
+   std::vector<TruthEstimator*> getProxies() const
+   {
+      return this->_proxies;
+   }
 
-    def _generate_estimate(self, truth: float) -> float:
-        self._update_agents_estimates(self.voters, truth)
-        self._update_agents_estimates(self.proxies, truth)
-        weights = self._generate_weights()
-        return self.voting_mechanism.solve(self.proxies, self.voters, weights)
+   std::vector<InactiveVoter*> getVoters() const
+   {
+      return this->_voters;
+   }
 
-    def set_seed(self, seed: int):
-        gen = Random(seed)
-        for agent in list(self.proxies) + list(self.voters):
-            agent.set_seed(gen.randint(0, ProxySystem.__random_seed_extent))
+   VotingMechanism* getVotingMechanism() const
+   {
+      return this->_votingMechanism;
+   }
 
-    def _update_agents_estimates(self, agents: Collection[TruthEstimator],
-                                 truth: float):
-        for a in agents:
-            a.estimate(truth)
-
-    def _generate_weights(self) -> dict[InactiveVoter, Rankings]:
-        proxies = tuple(self.proxies)
-        return {a: a.weight(proxies) for a in self.voters}
-*/
+   void setVotingMechanism(VotingMechanism* votingMechanism)
+   {
+      this->_votingMechanism = votingMechanism;
+   }
+};
