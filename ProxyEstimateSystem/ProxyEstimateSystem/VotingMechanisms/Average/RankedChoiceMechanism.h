@@ -1,56 +1,103 @@
-/*
-from __future__ import annotations
+#pragma once
 
-from collections import Counter
-from typing import TYPE_CHECKING
+#include <algorithm>
+#include <iterator>
+#include <numeric>
 
-from ..voting_mechanism import VotingMechanism
+#include <map>
 
-if TYPE_CHECKING:
-    from proxy_estimate_system import InactiveVoter, Rankings, TruthEstimator
+#include "../VotingMechanism.h"
+
+class RankedChoiceMechanism : VotingMechanism
+{
+private:
+   [[nodiscard]] static std::map<TruthEstimator*, int>*
+   _countVotes(const std::map<InactiveVoter*, Rankings>& rankings)
+   {
+      auto* ret = new std::map<TruthEstimator*, int>();
+
+      for (const auto& [_, ranking]: rankings)
+      {
+         auto* estimator = ranking.agentRanked(1);
+         if (ret->find(estimator) != ret->end())
+            (*ret)[estimator] = 0;
+         (*ret)[estimator] += 1;
+      }
+
+      return ret;
+   }
+
+   static void _removeAgentFromRankings(
+         TruthEstimator* const agent,
+         std::map<InactiveVoter*, Rankings>& rankings
+   )
+   {
+      for (auto& [_, ranking]: rankings)
+         ranking.removeAgent(agent);
+   }
+   
+public:
+   double solve(
+         const std::vector<TruthEstimator*>& proxies,
+         const std::vector<InactiveVoter*>& inactive,
+         const std::map<InactiveVoter*, Rankings>& rankings
+   ) const override
+   {
+      std::map<TruthEstimator*, int> weights;
+      std::map<TruthEstimator*, int>* votes = _countVotes(rankings);
+      int systemWeight = 0;
+      std::map<InactiveVoter*, Rankings> remainingRankings(rankings);
+
+      // Start by removing proxies that have no votes
+      int i = 0;
+      for (; i < proxies.size(); i++)
+      {
+         auto* proxy = proxies[i];
+         if (votes->find(proxy) == votes->end())
+         {
+            weights[proxy] = i + 1;
+            systemWeight += i + 1;
+            _removeAgentFromRankings(proxy, remainingRankings);
+         }
+      }
 
 
-class RankedChoiceMechanism(VotingMechanism):
-    """
-    Ignores weights. Proxies are given weights according to the number of
-    times they are ranked first. The proxy with the least number of votes is
-    given a weight of 1, while the one with the most is given n, where n is
-    the number of proxies.
-    """
+      // Now calculate the ranking for the remaining proxies
+      i++; // +1 to account for the removed proxies
+      for (; i <= proxies.size(); i++)
+      {
+         delete votes;
+         votes = _countVotes(remainingRankings);
+         auto* minVoteProxy = std::min_element(
+               votes->begin(),
+               votes->end(),
+               [](const auto& a, const auto& b) {
+                  return a.second < b.second;
+               }
+         )->first;
+         weights[minVoteProxy] = i;
+         systemWeight += i;
+         _removeAgentFromRankings(minVoteProxy, remainingRankings);
+      }
 
-    def solve(self, proxies: [TruthEstimator], inactive: [InactiveVoter],
-              rankings: dict[InactiveVoter, Rankings]) -> float:
-        weights = dict()
+      delete votes;
 
-        # Start by removing proxies that have no votes
-        votes = self.__count_votes(rankings)
-        i = 0
-        for i, proxy in enumerate(filter(lambda p: p not in votes, proxies),
-                                  start=1):
-            weights[proxy] = i
-            self.__remove_agent_from_rankings(proxy, rankings.values())
+      // Calculate the weighted average
+      std::vector<double> appliedWeights;
+      std::transform(
+            weights.begin(), weights.end(),
+            std::back_inserter(appliedWeights),
+            [](const auto& pair) {
+               auto* agent = pair.first;
+               double weight = pair.second;
+               return agent->getLastEstimate() * weight;
+            }
+      );
 
-        # Now calculate the ranking for the remaining proxies
-        i += 1  # +1 to account for the removed proxies
-        for i in range(i, len(proxies) + 1):
-            votes = self.__count_votes(rankings)
-            min_vote_proxy = min(votes, key=votes.get)
-            weights[min_vote_proxy] = i
-            self.__remove_agent_from_rankings(min_vote_proxy, rankings.values())
-
-        return (sum(proxy.last_estimate * weight
-                    for proxy, weight in weights.items())
-                / sum(range(1, len(proxies) + 1)))
-
-    @staticmethod
-    def __count_votes(rankings) -> dict[TruthEstimator, int]:
-        votes = Counter([ranking.agent_ranked(1)
-                         for ranking in rankings.values()])
-        return votes
-
-    @staticmethod
-    def __remove_agent_from_rankings(agent: TruthEstimator,
-                                     rankings: [Rankings]):
-        for ranking in rankings:
-            ranking.remove_agent(agent)
-*/
+      return std::accumulate(
+            appliedWeights.begin(),
+            appliedWeights.end(),
+            static_cast<double>(0)
+      ) / systemWeight;
+   }
+};
