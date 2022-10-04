@@ -1,25 +1,20 @@
-/*
-from __future__ import annotations
+#pragma once
 
-from typing import TYPE_CHECKING
+#include "WeightingMechanism.h"
 
-from .weighting_mechanism import WeightingMechanism
-from ..rankings import Rankings
-from ..ranking_item import RankingItem
+class BordaMechanism : public WeightingMechanism
+{
+private:
+   Rankings _applyWeights(TruthEstimator* agent, std::vector<TruthEstimator*>& orderedProxies) override
+   {
+      auto ret = Rankings();
 
-if TYPE_CHECKING:
-    from proxy_estimate_system import TruthEstimator
+      auto it = orderedProxies.rbegin();
+      for (int i = 1; it != orderedProxies.rend(); i++, ++it)
+      {
+         ret.insert(*it, i);
+      }
 
-
-class BordaMechanism(WeightingMechanism):
-    def apply_weights(self, agent: TruthEstimator,
-                      proxies: [TruthEstimator]) -> Rankings:
-        sorted_ = sorted(proxies,
-                         key=lambda p:
-                         abs(p.last_estimate - agent.last_estimate),
-                         reverse=True)
-        items = [RankingItem(rank, proxy)
-                 for rank, proxy in enumerate(sorted_, start=1)]
-        ret = Rankings(items)
-        return ret
-*/
+      return ret;
+   }
+};
