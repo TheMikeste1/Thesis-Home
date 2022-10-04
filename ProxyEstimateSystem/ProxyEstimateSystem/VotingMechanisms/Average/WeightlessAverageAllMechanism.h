@@ -4,7 +4,7 @@
 
 #include "../VotingMechanism.h"
 
-class WeightlessAverageAll : VotingMechanism
+class WeightlessAverageAllMechanism : VotingMechanism
 {
 public:
    double solve(
@@ -15,5 +15,7 @@ public:
    {
       double proxySum = std::accumulate(proxies.begin(), proxies.end(), 0);
       double inactiveSum = std::accumulate(inactive.begin(), inactive.end(), 0);
+
+      return (proxySum + inactiveSum) / (proxies.size + inactive.size());
    }
 };
