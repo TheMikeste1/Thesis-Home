@@ -7,7 +7,7 @@
 
 class VotingMechanism
 {
-private:
+protected:
    struct PartitionedWeights
    {
       double systemWeight;
