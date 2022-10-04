@@ -35,9 +35,9 @@ protected:
    }
 
 public:
-   double solve(
+   virtual double solve(
       const std::vector<TruthEstimator*>& proxies,
       const std::vector<InactiveVoter*>& inactive,
       const std::map<InactiveVoter*, Rankings>& rankings
-   ) = 0;
+   ) const = 0;
 };

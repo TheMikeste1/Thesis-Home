@@ -13,7 +13,7 @@ public:
       const std::vector<TruthEstimator*>& proxies,
       const std::vector<InactiveVoter*>& inactive,
       const std::map<InactiveVoter*, Rankings>& rankings
-   )
+   ) const override
    {
       auto* weights = _sumProxyWeights(rankings);
 
