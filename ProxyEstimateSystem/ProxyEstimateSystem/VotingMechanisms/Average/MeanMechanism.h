@@ -21,7 +21,7 @@ public:
 
       std::vector<double> appliedWeights;
       std::ranges::transform(
-            weights->proxyWeights,
+            weights->weights,
             std::back_inserter(appliedWeights),
             [](const auto& pair) {
                auto* agent = pair.first;

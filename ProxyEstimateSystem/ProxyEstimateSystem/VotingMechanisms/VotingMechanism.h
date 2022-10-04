@@ -11,7 +11,7 @@ protected:
    struct PartitionedWeights
    {
       double systemWeight = 0;
-      std::map<TruthEstimator*, double> proxyWeights;
+      std::map<TruthEstimator*, double> weights;
    };
 
    static PartitionedWeights* _sumProxyWeights(
@@ -22,12 +22,12 @@ protected:
 
       // Iterate through the Rankings, summing the weight for each proxy
       // and incrementing the system weight.
-      for (auto& [inactiveVoter, ranking]: rankings)
+      for (auto& [_, ranking]: rankings)
       {
          for (auto& rank: ranking)
          {
             ret->systemWeight += rank.weight;
-            ret->proxyWeights[rank.proxy] += rank.weight;
+            ret->weights[rank.proxy] += rank.weight;
          }
       }
 
