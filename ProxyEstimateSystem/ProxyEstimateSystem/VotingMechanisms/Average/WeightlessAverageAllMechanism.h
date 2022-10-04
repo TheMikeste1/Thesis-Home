@@ -13,14 +13,16 @@ public:
          const std::map<InactiveVoter*, Rankings>& rankings
    ) const override
    {
-      double proxySum = std::accumulate(proxies.begin(), proxies.end(), 0,
-                                        [](double sum, TruthEstimator* proxy) {
-                                           return sum + proxy->getLastEstimate();
-                                        });
-      double inactiveSum = std::accumulate(inactive.begin(), inactive.end(), 0,
-                                           [](double sum, InactiveVoter* voter) {
-                                              return sum + voter->getLastEstimate();
-                                           });
+      double proxySum = std::accumulate(
+            proxies.begin(), proxies.end(), 0,
+            [](double sum, TruthEstimator* proxy) {
+               return sum + proxy->getLastEstimate();
+            });
+      double inactiveSum = std::accumulate(
+            inactive.begin(), inactive.end(), 0,
+            [](double sum, InactiveVoter* voter) {
+               return sum + voter->getLastEstimate();
+            });
 
       return (proxySum + inactiveSum) / double(proxies.size() + inactive.size());
    }
