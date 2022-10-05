@@ -16,12 +16,12 @@ namespace average
       ) const override
       {
          double proxySum = std::accumulate(
-               proxies.begin(), proxies.end(), 0,
+               proxies.begin(), proxies.end(), 0.0,
                [](double sum, TruthEstimator* proxy) {
                   return sum + proxy->getLastEstimate();
                });
          double inactiveSum = std::accumulate(
-               inactive.begin(), inactive.end(), 0,
+               inactive.begin(), inactive.end(), 0.0,
                [](double sum, InactiveVoter* voter) {
                   return sum + voter->getLastEstimate();
                });
