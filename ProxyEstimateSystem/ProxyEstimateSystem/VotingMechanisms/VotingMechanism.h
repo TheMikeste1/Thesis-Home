@@ -27,6 +27,10 @@ protected:
          for (auto& rank: ranking)
          {
             ret->systemWeight += rank.weight;
+            if (ret->weights.find(rank.proxy) == ret->weights.end())
+            {
+               ret->weights[rank.proxy] = 0;
+            }
             ret->weights[rank.proxy] += rank.weight;
          }
       }
