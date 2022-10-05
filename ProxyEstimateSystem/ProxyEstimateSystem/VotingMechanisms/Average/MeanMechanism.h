@@ -5,6 +5,7 @@
 #include <numeric>
 
 #include "../VotingMechanism.h"
+
 namespace average
 {
    class MeanMechanism : public VotingMechanism
@@ -21,8 +22,9 @@ namespace average
          const double systemWeight = weights->systemWeight;
 
          std::vector<double> appliedWeights;
-         std::ranges::transform(
-               weights->weights,
+         std::transform(
+               weights->weights.begin(),
+               weights->weights.end(),
                std::back_inserter(appliedWeights),
                [](const auto& pair) {
                   auto* agent = pair.first;

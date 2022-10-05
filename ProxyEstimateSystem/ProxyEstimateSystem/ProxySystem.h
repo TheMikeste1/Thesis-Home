@@ -11,8 +11,6 @@
 class ProxySystem : public TruthEstimator
 {
 private:
-   static const unsigned int RANDOM_SEED_EXTENT = UINT_MAX;
-
    std::vector<TruthEstimator*> _proxies;
    std::vector<InactiveVoter*> _voters;
    VotingMechanism* _votingMechanism;

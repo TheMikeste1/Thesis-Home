@@ -25,8 +25,9 @@ public:
       }
 
       // Sort the proxies by position
-      std::ranges::sort(
-            proxies,
+      std::sort(
+            proxies.begin(),
+            proxies.end(),
             [agent](TruthEstimator* a, TruthEstimator* b) {
                return abs(agent->getLastEstimate() - a->getLastEstimate())
                       < abs(agent->getLastEstimate() - b->getLastEstimate());
