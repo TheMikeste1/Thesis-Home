@@ -20,7 +20,7 @@ namespace average
          for (const auto& [_, ranking]: rankings)
          {
             auto* estimator = ranking.agentRanked(1);
-            if (ret->find(estimator) != ret->end())
+            if (ret->find(estimator) == ret->end())
                (*ret)[estimator] = 0;
             (*ret)[estimator] += 1;
          }

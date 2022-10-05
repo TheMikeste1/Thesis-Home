@@ -21,7 +21,7 @@ namespace candidate
          for (const auto& [_, ranking]: rankings)
          {
             auto* estimator = ranking.agentRanked(1);
-            if (ret->find(estimator) != ret->end())
+            if (ret->find(estimator) == ret->end())
                (*ret)[estimator] = 0;
             (*ret)[estimator] += 1;
          }
@@ -46,7 +46,7 @@ namespace candidate
          )->first;
 
          std::map<InactiveVoter*, Rankings> remainingRankings(rankings);
-         while (float(votes->at(maxVoteProxy)) < totalVotes / 2)
+         while (double(votes->at(maxVoteProxy)) < totalVotes / 2)
          {
             TruthEstimator* minVoteProxy = std::min_element(
                   votes->begin(), votes->end(),
