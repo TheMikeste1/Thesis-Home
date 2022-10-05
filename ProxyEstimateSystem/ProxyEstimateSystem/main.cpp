@@ -3,13 +3,14 @@
 
 #include <chrono>
 #include <iostream>
-#include <set>
 #include <thread>
 
-#include "Utilities.h"
-#include "Rankings.h"
-#include "DistributionStrategies\BetaDistribution.h"
-#include "VotingMechanisms\Average\MeanMechanism.h"
+#include "Agent.h"
+#include "ProxySystem.h"
+#include "DistributionStrategies/DistributionStrategies.h"
+#include "VotingMechanisms/Average/Average.h"
+#include "VotingMechanisms/Candidate/Candidate.h"
+#include "WeightingMechanisms/WeightingMechanisms.h"
 
 using namespace std;
 
@@ -31,44 +32,61 @@ using namespace std;
 
 int main()
 {
-   BetaDistribution strategy(0.3, 0.3);
-   double min = INFINITY;
-   double max = -INFINITY;
-   int countInRange = 0;
-   const int count = 100000;
-   int p[100] = {};
-   for (int i = 0; i < count; ++i)
-   {
-      double value = strategy.getValue(0, 100);
+   // Test for ProxySystem
 
-      if (value < min)
-      {
-         min = value;
-      }
-      if (value > max)
-      {
-         max = value;
-      }
-
-      if (value >= 0 && value < 100)
-      {
-         ++countInRange;
-         p[(int) value]++;
-      }
-
-      // cout << value << endl;
-   }
-
-   cout << endl << "p: " << endl;
+   // Create a bunch of proxies
+   std::vector<DistributionStrategy*> distStrategies;
+   std::vector<TruthEstimator*> proxies;
    for (int i = 0; i < 100; ++i)
    {
-      std::cout << i << "-" << (i + 1) << ": ";
-      std::cout << std::string(p[i] * count / count, '*') << std::endl;
+      auto* strat = new BetaDistribution(0.3, 3);
+      distStrategies.push_back(strat);
+      auto* proxy = new Agent(strat, 1);
+      proxies.push_back(proxy);
    }
 
-   cout << endl << min << " to " << max << endl;
-   cout << countInRange << " in range (" << double(countInRange) / count * 100 << "%)"
-        << endl;
+   // Create a bunch of voters
+   std::vector<InactiveVoter*> inactives;
+   std::vector<TruthEstimator*> agents(proxies);
+   std::vector<WeightingMechanism*> wms;
+   for (int i = 0; i < 100; ++i)
+   {
+      auto* strat = new GaussianDistribution();
+      distStrategies.push_back(strat);
+      auto* agent = new Agent(strat, 1);
+      agents.push_back(agent);
+      auto* wm = new ClosestMechanism();
+      wms.push_back(wm);
+      auto* voter = new InactiveVoter(agent, wm);
+      inactives.push_back(voter);
+   }
+
+   // Create a voting mechanism
+   auto* votingMechanism = new average::WeightlessAverageAllMechanism();
+
+   // Create a proxy system
+   ProxySystem pes(proxies, inactives, votingMechanism);
+
+   // Output a bunch of estimates
+   for (int i = 0; i < 100; ++i)
+   {
+      cout << pes.estimate(0) << endl;
+   }
+
+   // Clean up
+   for (auto* agent : agents)
+      delete agent;
+
+   for (auto* inactive : inactives)
+      delete inactive;
+
+   for (auto* strat : distStrategies)
+      delete strat;
+
+   for (auto* wm : wms)
+      delete wm;
+
+   delete votingMechanism;
 
    return 0;
 }
