@@ -6,37 +6,40 @@
 
 #include "../VotingMechanism.h"
 
-class MedianMechanism : public VotingMechanism
+namespace candidate
 {
-public:
-   double solve(
-         const std::vector<TruthEstimator*>& proxies,
-         const std::vector<InactiveVoter*>& inactive,
-         const std::map<InactiveVoter*, Rankings>& rankings
-   ) const override
+   class MedianMechanism : public VotingMechanism
    {
-      auto* partitionedWeights = _sumProxyWeights(rankings);
-
-      std::vector<TruthEstimator*> sortedProxies(proxies);
-      std::sort(
-            sortedProxies.begin(),
-            sortedProxies.end(),
-            [](const auto& a, const auto& b) {
-               return a->getLastEstimate() < b->getLastEstimate();
-            }
-      );
-      double sum = 0;
-      for (const auto& proxy: sortedProxies)
+   public:
+      double solve(
+            const std::vector<TruthEstimator*>& proxies,
+            const std::vector<InactiveVoter*>& inactive,
+            const std::map<InactiveVoter*, Rankings>& rankings
+      ) const override
       {
-         sum += partitionedWeights->weights.at(proxy);
-         if (sum > partitionedWeights->systemWeight / 2)
+         auto* partitionedWeights = _sumProxyWeights(rankings);
+
+         std::vector<TruthEstimator*> sortedProxies(proxies);
+         std::sort(
+               sortedProxies.begin(),
+               sortedProxies.end(),
+               [](const auto& a, const auto& b) {
+                  return a->getLastEstimate() < b->getLastEstimate();
+               }
+         );
+         double sum = 0;
+         for (const auto& proxy: sortedProxies)
          {
-            delete partitionedWeights;
-            return proxy->getLastEstimate();
+            sum += partitionedWeights->weights.at(proxy);
+            if (sum > partitionedWeights->systemWeight / 2)
+            {
+               delete partitionedWeights;
+               return proxy->getLastEstimate();
+            }
          }
+         delete partitionedWeights;
+         // Should never reach here
+         throw std::runtime_error("MedianMechanism::solve() failed");
       }
-      delete partitionedWeights;
-      // Should never reach here
-      throw std::runtime_error("MedianMechanism::solve() failed");
-   }
-};
+   };
+}
