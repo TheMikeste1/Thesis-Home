@@ -12,6 +12,8 @@ protected:
    virtual double _generateEstimate(double truth) = 0;
 
 public:
+   virtual ~TruthEstimator() = default;
+
    double getLastEstimate() const
    {
       if (!_hasEstimate)

@@ -15,6 +15,8 @@ private:
    ) = 0;
 
 public:
+   virtual ~WeightingMechanism() = default;
+
    Rankings applyWeights(TruthEstimator* agent, std::vector<TruthEstimator*> proxies)
    {
       if (proxies.empty())
