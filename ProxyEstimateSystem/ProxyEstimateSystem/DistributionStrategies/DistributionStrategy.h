@@ -5,18 +5,16 @@
 class DistributionStrategy
 {
 protected:
-   std::default_random_engine machine = std::default_random_engine(); // NOLINT(cert-msc51-cpp)
+   std::default_random_engine machine;
    
 public:
-   DistributionStrategy()
+   DistributionStrategy() : DistributionStrategy(std::random_device()()) {}
+
+   explicit DistributionStrategy(unsigned int seed) // NOLINT(cert-msc51-cpp)
    {
-      this->seed(time(nullptr));
+      machine = std::default_random_engine(seed);
    }
 
-   explicit DistributionStrategy(unsigned int seed)
-   {
-      this->seed(seed);
-   }
    virtual ~DistributionStrategy() = default;
 
 
