@@ -33,7 +33,7 @@ void Rankings::insert(TruthEstimator* proxy, double weight)
          this->_orderedRankings,
          {proxy, weight},
          [](const RankingsItem& a, const RankingsItem& b) -> bool {
-            return a.weight < b.weight;
+            return a.weight >= b.weight;
          }
    );
 }
