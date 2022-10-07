@@ -1,3 +1,5 @@
+#include <iterator>
+
 #include "ProxySystem.h"
 
 void ProxySystem::_updateAgentsEstimates(
