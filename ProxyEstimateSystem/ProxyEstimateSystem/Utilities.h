@@ -3,6 +3,7 @@
 #include <functional>
 #include <vector>
 
+// Template functions must be defined in the header file.
 
 template<class T>
 void binaryInsert(std::vector<T>& orderedVector, const T& item,
