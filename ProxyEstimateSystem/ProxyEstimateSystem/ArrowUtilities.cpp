@@ -21,7 +21,7 @@ arrow::Result<std::shared_ptr<arrow::Table>> vectorToColumnarTable(
 
    // Now we can loop over our existing data and insert it into the builders. The
    // `Append` calls here may fail (e.g. we cannot allocate enough additional memory).
-   // Thus we need to check their return values. For more information on these values,
+   // Thus, we need to check their return values. For more information on these values,
    // check the documentation about `arrow::Status`.
    for (const auto& row: rows)
    {
@@ -57,12 +57,12 @@ arrow::Status writeRowsToFile(
    // https://github.com/apache/arrow/blob/master/cpp/examples/tutorial_examples/file_access_example.cc#L69
    std::shared_ptr<arrow::Table> table;
 
-   ARROW_ASSIGN_OR_RAISE(table, vectorToColumnarTable(rows));
+   ARROW_ASSIGN_OR_RAISE(table, vectorToColumnarTable(rows))
 
    std::shared_ptr<arrow::io::FileOutputStream> file;
-   ARROW_ASSIGN_OR_RAISE(file, arrow::io::FileOutputStream::Open(filename, false));
+   ARROW_ASSIGN_OR_RAISE(file, arrow::io::FileOutputStream::Open(filename, false))
    ARROW_ASSIGN_OR_RAISE(std::shared_ptr<arrow::ipc::RecordBatchWriter> ipc_writer,
-                         arrow::ipc::MakeFileWriter(file, table->schema()));
+                         arrow::ipc::MakeFileWriter(file, table->schema()))
    ARROW_RETURN_NOT_OK(ipc_writer->WriteTable(*table));
    ARROW_RETURN_NOT_OK(ipc_writer->Close());
 

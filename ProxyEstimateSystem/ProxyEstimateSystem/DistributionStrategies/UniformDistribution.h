@@ -10,7 +10,7 @@ private:
 
 public:
    UniformDistribution() = default;
-   UniformDistribution(unsigned int seed) : DistributionStrategy(seed) {}
+   explicit UniformDistribution(unsigned int seed) : DistributionStrategy(seed) {}
 
    double getValue(double min, double max) override
    {

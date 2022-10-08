@@ -1,6 +1,6 @@
 #pragma once
 
-// Include all of the weighting mechanisms
+// Include all the weighting mechanisms
 #include "BordaMechanism.h"
 #include "ClosestMechanism.h"
 #include "DistanceMechanism.h"

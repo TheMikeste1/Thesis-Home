@@ -14,7 +14,7 @@ private:
 
 public:
    GaussianDistribution() = default;
-   GaussianDistribution(unsigned int seed) : DistributionStrategy(seed) {}
+   explicit GaussianDistribution(unsigned int seed) : DistributionStrategy(seed) {}
 
    double getValue(double min, double max) override
    {
