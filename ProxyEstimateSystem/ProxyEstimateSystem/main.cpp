@@ -189,11 +189,14 @@ int main()
    runSimulations(generatedData, runsPerCombo, numberOfAgents, distributions,
                   votingMechanisms);
 
+   // Write the data to a file
+   std::cout << "Writing data to file...\n";
    struct tm localTime = {};
    localtime_s(&localTime, &t);
    std::ostringstream oss;
    oss << std::put_time(&localTime, filenameFormat) << ".feather";
 
    writeRowsToFile(oss.str(), generatedData);
+   std::cout << "Done!\n";
    return 0;
 }
