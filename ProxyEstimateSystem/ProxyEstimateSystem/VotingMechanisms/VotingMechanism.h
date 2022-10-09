@@ -39,6 +39,8 @@ protected:
    }
 
 public:
+   virtual ~VotingMechanism() = default;
+
    virtual double solve(
          const std::vector<TruthEstimator*>& proxies,
          const std::vector<InactiveVoter*>& inactive,

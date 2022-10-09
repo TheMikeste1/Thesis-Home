@@ -14,7 +14,7 @@ protected:
 public:
    virtual ~TruthEstimator() = default;
 
-   double getLastEstimate() const
+   virtual double getLastEstimate() const
    {
       if (!_hasEstimate)
       {

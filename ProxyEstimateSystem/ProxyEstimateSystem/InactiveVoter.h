@@ -26,6 +26,11 @@ public:
       delete _weightingMechanism;
    }
 
+   double getLastEstimate() const override
+   {
+      return _estimator->getLastEstimate();
+   }
+
    TruthEstimator* getEstimator() const
    {
       return _estimator;
