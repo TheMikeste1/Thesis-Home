@@ -1,4 +1,4 @@
-﻿// ProxyEstimateSystem.cpp : Defines the entry point for the application.
+// ProxyEstimateSystem.cpp : Defines the entry point for the application.
 //
 
 #include <ctime>
@@ -45,6 +45,12 @@ void runSimulations(
         numInactiveAgents++
          )
    {
+      if (numInactiveAgents % 100 == 0)
+      {
+         std::cout << "Running for " << numInactiveAgents << " inactive agents ("
+                   << (numInactiveAgents * 100.0 / numberOfAgents) << "%)\n";
+      }
+
       for (const auto& [distStrategyName, distributionStrategyFactory]: distributionStrategies)
       {
          // Set up the agents
