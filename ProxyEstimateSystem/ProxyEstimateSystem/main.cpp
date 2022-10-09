@@ -1,4 +1,4 @@
-// ProxyEstimateSystem.cpp : Defines the entry point for the application.
+﻿// ProxyEstimateSystem.cpp : Defines the entry point for the application.
 //
 
 #include <ctime>
@@ -140,6 +140,8 @@ void runSimulations(
 
 int main()
 {
+   auto filenameFormat = "%m-%d-%Y_%H-%M-%S";
+
    const int runsPerCombo = 20;
    // Using the 117th Congress
    // https://history.house.gov/Institution/Party-Divisions/Party-Divisions/
@@ -166,17 +168,16 @@ int main()
          {"Plurality",                           []() { return new candidate::PluralityMechanism(); }},
          {"Weighted Instant Runoff (Candidate)", []() { return new candidate::WeightedInstantRunoffMechanism(); }},
    };
-
+   // Get start time
+   auto t = std::time(nullptr);
    std::vector<DataRow> generatedData;
    runSimulations(generatedData, runsPerCombo, numberOfAgents, distributions,
                   votingMechanisms);
 
-   auto t = std::time(nullptr);
    struct tm localTime = {};
    localtime_s(&localTime, &t);
-
    std::ostringstream oss;
-   oss << std::put_time(&localTime, "%d-%m-%Y_%H-%M-%S") << ".feather";
+   oss << std::put_time(&localTime, filenameFormat) << ".feather";
 
    writeRowsToFile(oss.str(), generatedData);
    return 0;
