@@ -1,4 +1,4 @@
-﻿// ProxyEstimateSystem.cpp : Defines the entry point for the application.
+// ProxyEstimateSystem.cpp : Defines the entry point for the application.
 //
 
 #include <ctime>
@@ -40,72 +40,71 @@ void runSimulations(
 
    generatedData.reserve(numberOfCombinations * runsPerCombination);
 
-   for (int numInactiveAgents = 1;
-        numInactiveAgents < numberOfAgents;
-        numInactiveAgents++
-         )
+   long long currentRow = 0;
+   for (const auto& [distStrategyName, distributionStrategyFactory]: distributionStrategies)
    {
-      if (numInactiveAgents % 100 == 0)
+      // Set up the agents
+      std::vector<Agent> agents;
+      agents.reserve(numberOfAgents);
+      for (int i = 0; i < numberOfAgents; i++)
       {
-         std::cout << "Running for " << numInactiveAgents << " inactive agents ("
-                   << (numInactiveAgents * 100.0 / numberOfAgents) << "%)\n";
+         agents.emplace_back(
+               distributionStrategyFactory(),
+               1
+         );
       }
-
-      for (const auto& [distStrategyName, distributionStrategyFactory]: distributionStrategies)
+      // Do the runs
+      for (int i = 0; i < runsPerCombination; i++)
       {
-         // Set up the agents
-         std::vector<Agent> agents;
-         agents.reserve(numberOfAgents);
-         for (int i = 0; i < numberOfAgents; i++)
+         // Have each agent vote
+         for (auto& agent: agents)
          {
-            agents.emplace_back(
-                  distributionStrategyFactory(),
-                  1
-            );
-         }
-         // Set up the inactive agents
-         std::vector<InactiveVoter*> inactiveAgents;
-         inactiveAgents.reserve(numInactiveAgents);
-         for (int i = 0; i < numInactiveAgents; i++)
-         {
-            auto* inactiveAgent = new InactiveVoter(
-                  &agents[i],
-                  new ClosestMechanism()
-            );
-
-            inactiveAgents.push_back(inactiveAgent);
+            agent.estimate(0);
          }
 
-         // Get the list of proxies
-         std::vector<TruthEstimator*> proxies;
-         proxies.reserve(numberOfAgents - numInactiveAgents);
-         for (int i = numInactiveAgents; i < numberOfAgents; i++)
+         // Apply each voting mechanism
+         for (const auto& [vmName, votingMechanismFactory]: votingMechanisms)
          {
-            proxies.push_back(&agents[i]);
-         }
+            auto* vm = votingMechanismFactory();
 
-         assert(proxies.size() + inactiveAgents.size() == numberOfAgents);
-
-         // Do the runs
-         for (int i = 0; i < runsPerCombination; i++)
-         {
-            // Have each agent vote
+            std::vector<TruthEstimator*> proxies;
+            std::vector<InactiveVoter*> inactiveAgents;
+            inactiveAgents.reserve(numberOfAgents - 1);
+            proxies.reserve(numberOfAgents);
             for (auto& agent: agents)
             {
-               agent.estimate(0);
+               proxies.push_back(&agent);
             }
 
-            // Have each inactive agent weigh the proxies
             std::map<InactiveVoter*, Rankings> rankings;
-            for (auto& inactiveAgent: inactiveAgents)
+            // Get the inactive agents, adding one additional agent each time.
+            for (
+                  int numInactiveAgents = 1;
+                  numInactiveAgents < numberOfAgents;
+                  numInactiveAgents++
+                  )
             {
-               rankings[inactiveAgent] = inactiveAgent->weight(proxies);
-            }
+               // Set up the new inactive agent
+               auto* newInactive = new InactiveVoter(
+                     &agents[numberOfAgents - numInactiveAgents],
+                     new ClosestMechanism()
+               );
+               inactiveAgents.push_back(newInactive);
 
-            // Apply each voting mechanism
-            for (const auto& [vmName, votingMechanismFactory]: votingMechanisms)
-            {
-               auto vm = votingMechanismFactory();
+               // Update the list of proxies by removing the now-inactive agent
+               proxies.pop_back();
+
+               assert(proxies.size() + inactiveAgents.size() == numberOfAgents);
+
+               // Have each inactive agent weigh the proxies
+               // Remove the inactive agent from the current rankings
+               for (auto& p: rankings)
+               {
+                  p.second.removeAgent(newInactive->getEstimator());
+               }
+               // Weigh with the new inactive
+               rankings[newInactive] = newInactive->weight(proxies);
+
                auto result = vm->solve(
                      proxies,
                      inactiveAgents,
@@ -114,8 +113,8 @@ void runSimulations(
 
                std::stringstream ss;
                ss << distStrategyName << "_" << numInactiveAgents << "_" << i;
-
                auto id = ss.str();
+
                DataRow row = {
                      id,
                      distStrategyName,
@@ -126,17 +125,33 @@ void runSimulations(
                };
 
                generatedData.push_back(row);
-            }
-         }
+               currentRow++;
 
-         // Cleanup inactive agents
-         for (auto& inactiveAgent: inactiveAgents)
-         {
-            delete inactiveAgent;
+               if (currentRow % 100 == 0)
+               {
+                  std::cout << std::fixed << std::setprecision(2)
+                            << "\rRunning combination " << currentRow
+                            << " ("
+                            << static_cast<double>(currentRow)
+                               / static_cast<double>(
+                                     numberOfCombinations
+                                     * runsPerCombination
+                               ) * 100
+                            << "%)\n";
+               }
+            }
+            // Clean up the voting mechanism
+            delete vm;
+            // Clean up inactive agents
+            for (auto& inactiveAgent: inactiveAgents)
+            {
+               delete inactiveAgent;
+            }
          }
       }
    }
 }
+
 
 int main()
 {
