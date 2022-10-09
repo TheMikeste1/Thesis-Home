@@ -21,6 +21,11 @@ public:
    {
    }
 
+   ~InactiveVoter() override
+   {
+      delete _weightingMechanism;
+   }
+
    TruthEstimator* getEstimator() const
    {
       return _estimator;

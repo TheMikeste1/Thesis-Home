@@ -21,6 +21,11 @@ public:
    {
    }
 
+   ~Agent() override
+   {
+      delete _distributionStrategy;
+   }
+
    DistributionStrategy* getDistributionStrategy() const
    {
       return _distributionStrategy;
