@@ -42,11 +42,11 @@ arrow::Result<std::shared_ptr<arrow::Table>> vectorToColumnarTable(
    std::shared_ptr<arrow::Array> numberOfProxiesArray;
    std::shared_ptr<arrow::Array> numberOfInactivesArray;
    std::shared_ptr<arrow::Array> estimatesArray;
-   ARROW_RETURN_NOT_OK(estimateBuilder.Finish(&idArray));
-   ARROW_RETURN_NOT_OK(estimateBuilder.Finish(&distributionArray));
-   ARROW_RETURN_NOT_OK(estimateBuilder.Finish(&votingMechanismArray));
-   ARROW_RETURN_NOT_OK(estimateBuilder.Finish(&numberOfProxiesArray));
-   ARROW_RETURN_NOT_OK(estimateBuilder.Finish(&numberOfInactivesArray));
+   ARROW_RETURN_NOT_OK(idBuilder.Finish(&idArray));
+   ARROW_RETURN_NOT_OK(distributionBuilder.Finish(&distributionArray));
+   ARROW_RETURN_NOT_OK(votingMechanismBuilder.Finish(&votingMechanismArray));
+   ARROW_RETURN_NOT_OK(numberOfProxiesBuilder.Finish(&numberOfProxiesArray));
+   ARROW_RETURN_NOT_OK(numberOfInactivesBuilder.Finish(&numberOfInactivesArray));
    ARROW_RETURN_NOT_OK(estimateBuilder.Finish(&estimatesArray));
 
    std::vector<std::shared_ptr<arrow::Field>> schemaVector = {
@@ -89,6 +89,7 @@ arrow::Status writeRowsToFile(
    std::shared_ptr<arrow::Table> table;
 
    ARROW_ASSIGN_OR_RAISE(table, vectorToColumnarTable(rows))
+   table->ValidateFull();
 
    std::shared_ptr<arrow::io::FileOutputStream> file;
    ARROW_ASSIGN_OR_RAISE(file, arrow::io::FileOutputStream::Open(filename, false))
