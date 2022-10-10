@@ -37,6 +37,8 @@ void runSimulations(
          * (numberOfAgents - 1);
    std::cout << "   " << numberOfCombinations << " total combinations\n";
    std::cout << "   " << runsPerCombination << " runs per combination\n";
+   std::cout << "   " << runsPerCombination * numberOfCombinations
+             << " total runs\n";
 
    generatedData.reserve(numberOfCombinations * runsPerCombination);
 
