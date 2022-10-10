@@ -19,7 +19,7 @@ namespace candidate
             const std::map<InactiveVoter*, Rankings>& rankings
       ) const override
       {
-         auto totalVotes = float(inactive.size());
+         auto totalVotes = float(inactive.size() + proxies.size());
          std::map<TruthEstimator*, int>* votes = _countVotes(rankings);
          TruthEstimator* maxVoteProxy = std::max_element(
                votes->begin(), votes->end(),
@@ -37,6 +37,7 @@ namespace candidate
                      return a.second < b.second;
                   }
             )->first;
+            totalVotes--;
             // Remove the proxy with the least votes
             for (auto& [_, ranking]: remainingRankings)
                ranking.removeAgent(minVoteProxy);
