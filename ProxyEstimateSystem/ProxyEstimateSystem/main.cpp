@@ -150,6 +150,7 @@ void runSimulations(
          }
       }
    }
+   std::cout << std::endl;
 }
 
 
