@@ -136,7 +136,7 @@ void runSimulations(
                                      numberOfCombinations
                                      * runsPerCombination
                                ) * 100
-                            << "%)\n";
+                            << "%)";
                }
             }
             // Clean up the voting mechanism
