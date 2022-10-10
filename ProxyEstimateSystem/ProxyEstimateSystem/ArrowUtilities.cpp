@@ -55,7 +55,7 @@ arrow::Result<std::shared_ptr<arrow::Table>> vectorToColumnarTable(
          arrow::field("Voting Mechanism", arrow::utf8()),
          arrow::field("Number of Proxies", arrow::int32()),
          arrow::field("Number of Inactives", arrow::int32()),
-         arrow::field("Estimate", arrow::float64()),
+         arrow::field("Output", arrow::float64()),
    };
 
    auto schema = std::make_shared<arrow::Schema>(schemaVector);
