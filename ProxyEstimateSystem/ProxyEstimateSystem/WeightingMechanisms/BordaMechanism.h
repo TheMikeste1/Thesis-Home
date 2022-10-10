@@ -13,7 +13,7 @@ private:
       auto it = orderedProxies.rbegin();
       for (int i = 1; it != orderedProxies.rend(); i++, ++it)
       {
-         ret.insert(*it, i);
+         ret.insert(*it, i / float(orderedProxies.size()));
       }
 
       return ret;

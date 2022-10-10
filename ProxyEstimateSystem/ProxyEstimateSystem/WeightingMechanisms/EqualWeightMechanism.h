@@ -12,7 +12,7 @@ private:
 
       for (auto proxy: orderedProxies)
       {
-         ret.insert(proxy, 1);
+         ret.insert(proxy, 1.0 / orderedProxies.size());
       }
 
       return ret;

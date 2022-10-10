@@ -35,6 +35,17 @@ public:
       );
       Rankings ret = this->_applyWeights(agent, proxies);
       assert(ret.size() == proxies.size());
+
+#ifdef NDEBUG
+      // Check that the weights add up to 1
+      double total = 0;
+      for (auto& [_, weight] : ret)
+      {
+         total += weight;
+      }
+      assert(total == 1);
+#endif
+
       return ret;
    }
 };
