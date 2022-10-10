@@ -23,7 +23,8 @@ void runSimulations(
       const std::map<std::string, std::function<DistributionStrategy*(
             void)>>& distributionStrategies,
       const std::map<std::string, std::function<VotingMechanism*(
-            void)>>& votingMechanisms
+            void)>>& votingMechanisms,
+      int iStart = 0
 )
 {
    std::cout << "Starting simulations with\n";
@@ -111,7 +112,7 @@ void runSimulations(
                );
 
                std::stringstream ss;
-               ss << distStrategyName << "_" << numInactiveAgents << "_" << i;
+               ss << distStrategyName << "_" << numInactiveAgents << "_" << i + iStart;
                auto id = ss.str();
 
                DataRow row = {
@@ -187,7 +188,7 @@ int main()
    auto t = std::time(nullptr);
    std::vector<DataRow> generatedData;
    runSimulations(generatedData, runsPerCombo, numberOfAgents, distributions,
-                  votingMechanisms);
+                  votingMechanisms, 20);
 
    // Write the data to a file
    std::cout << "Writing data to file...\n";
