@@ -80,6 +80,8 @@ namespace candidate
                      return a.second < b.second;
                   }
             )->first;
+            // Remove weight for the eliminated proxy
+            systemWeight--;
             // Remove the proxy with the least votes
             for (auto& [inactiveVoter, ranking]: remainingRankings)
             {
