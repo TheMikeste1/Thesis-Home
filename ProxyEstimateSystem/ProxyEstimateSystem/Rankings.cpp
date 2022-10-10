@@ -7,7 +7,7 @@
 bool Rankings::_rankingInRange(int rank) const
 {
    rank--;
-   return rank >= 0 || rank < this->size();
+   return rank >= 0 && rank < this->size();
 }
 
 std::vector<Rankings::RankingsItem>::const_iterator
