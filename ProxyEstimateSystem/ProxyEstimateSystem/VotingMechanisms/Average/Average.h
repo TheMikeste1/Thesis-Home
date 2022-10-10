@@ -5,3 +5,4 @@
 #include "RankedChoiceMechanism.h"
 #include "WeightedInstantRunoffMechanism.h"
 #include "WeightlessAverageAllMechanism.h"
+#include "WeightlessAverageProxiesMechanism.h"

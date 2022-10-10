@@ -176,6 +176,7 @@ int main()
          {"Ranked Choice",                       []() { return new average::RankedChoiceMechanism(); }},
          {"Weighted Instant Runoff (Average)",   []() { return new average::WeightedInstantRunoffMechanism(); }},
          {"Weightless Average All",              []() { return new average::WeightlessAverageAllMechanism(); }},
+         {"Weightless Average Proxies",          []() { return new average::WeightlessAverageProxiesMechanism(); }},
 
          // Candidate mechanisms
          {"Instant Runoff (Candidate)",          []() { return new candidate::InstantRunoffMechanism(); }},
