@@ -12,23 +12,6 @@ namespace candidate
  */
    class InstantRunoffMechanism : public VotingMechanism
    {
-   private:
-      [[nodiscard]] static std::map<TruthEstimator*, int>*
-      _countVotes(const std::map<InactiveVoter*, Rankings>& rankings)
-      {
-         auto* ret = new std::map<TruthEstimator*, int>();
-
-         for (const auto& [_, ranking]: rankings)
-         {
-            auto* estimator = ranking.agentRanked(1);
-            if (ret->find(estimator) == ret->end())
-               (*ret)[estimator] = 0;
-            (*ret)[estimator] += 1;
-         }
-
-         return ret;
-      }
-
    public:
       double solve(
             const std::vector<TruthEstimator*>& proxies,

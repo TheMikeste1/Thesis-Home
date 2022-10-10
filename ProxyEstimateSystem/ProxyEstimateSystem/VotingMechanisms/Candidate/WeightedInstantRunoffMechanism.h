@@ -48,10 +48,14 @@ namespace candidate
          // Get the weights for each inactive voter
          // so we can apply it to their first choice
          auto* partitionedWeights = _sumInactiveWeights(rankings);
-         double systemWeight = partitionedWeights->systemWeight;
+         double systemWeight = partitionedWeights->systemWeight + proxies.size();
 
          // Calculate the weight for each proxy
          std::map<TruthEstimator*, double> votes;
+         for (const auto proxy : proxies)
+         {
+            votes[proxy] = 1;
+         }
          for (auto& [inactiveVoter, ranking]: rankings)
          {
             auto* voter = (TruthEstimator*) (inactiveVoter);

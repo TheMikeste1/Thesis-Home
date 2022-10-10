@@ -12,22 +12,6 @@ namespace average
    class RankedChoiceMechanism : public VotingMechanism
    {
    private:
-      [[nodiscard]] static std::map<TruthEstimator*, int>*
-      _countVotes(const std::map<InactiveVoter*, Rankings>& rankings)
-      {
-         auto* ret = new std::map<TruthEstimator*, int>();
-
-         for (const auto& [_, ranking]: rankings)
-         {
-            auto* estimator = ranking.agentRanked(1);
-            if (ret->find(estimator) == ret->end())
-               (*ret)[estimator] = 0;
-            (*ret)[estimator] += 1;
-         }
-
-         return ret;
-      }
-
       static void _removeAgentFromRankings(
             TruthEstimator* const agent,
             std::map<InactiveVoter*, Rankings>& rankings
@@ -49,23 +33,9 @@ namespace average
          int systemWeight = 0;
          std::map<InactiveVoter*, Rankings> remainingRankings(rankings);
 
-         // Start by removing proxies that have no votes
-         int i = 0;
-         for (; i < proxies.size(); i++)
-         {
-            auto* proxy = proxies[i];
-            if (votes->find(proxy) == votes->end())
-            {
-               weights[proxy] = i + 1;
-               systemWeight += i + 1;
-               _removeAgentFromRankings(proxy, remainingRankings);
-            }
-         }
-
-
          // Now calculate the ranking for the remaining proxies
-         i++; // +1 to account for the removed proxies
-         for (; i <= proxies.size(); i++)
+         // Start counting at 1 so every proxy gets a vote
+         for (int i = 1; i <= proxies.size(); i++)
          {
             delete votes;
             votes = _countVotes(remainingRankings);
