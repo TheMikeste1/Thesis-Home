@@ -76,7 +76,6 @@ void runSimulations(
                proxies.push_back(&agent);
             }
 
-            std::map<InactiveVoter*, Rankings> rankings;
             // Get the inactive agents, adding one additional agent each time.
             for (
                   int numInactiveAgents = 1;
@@ -97,13 +96,11 @@ void runSimulations(
                assert(proxies.size() + inactiveAgents.size() == numberOfAgents);
 
                // Have each inactive agent weigh the proxies
-               // Remove the inactive agent from the current rankings
-               for (auto& p: rankings)
+               std::map<InactiveVoter*, Rankings> rankings;
+               for (auto* inactiveAgent: inactiveAgents)
                {
-                  p.second.removeAgent(newInactive->getEstimator());
+                  rankings[inactiveAgent] = inactiveAgent->weight(proxies);
                }
-               // Weigh with the new inactive
-               rankings[newInactive] = newInactive->weight(proxies);
 
                auto result = vm->solve(
                      proxies,
