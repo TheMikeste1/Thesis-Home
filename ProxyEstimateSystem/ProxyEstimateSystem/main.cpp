@@ -187,14 +187,15 @@ int main()
    };
    // Get start time
    auto t = std::time(nullptr);
+   struct tm localTime = {};
+   localtime_s(&localTime, &t);
+   std::cout << "Starting at " << std::put_time(&localTime, "%H:%M:%S") << std::endl;
    std::vector<DataRow> generatedData;
    runSimulations(generatedData, runsPerCombo, numberOfAgents, distributions,
                   votingMechanisms, 20);
 
    // Write the data to a file
    std::cout << "Writing data to file...\n";
-   struct tm localTime = {};
-   localtime_s(&localTime, &t);
    std::ostringstream oss;
    oss << std::put_time(&localTime, filenameFormat) << ".feather";
 
