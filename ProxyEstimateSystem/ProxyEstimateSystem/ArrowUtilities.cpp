@@ -50,7 +50,7 @@ arrow::Result<std::shared_ptr<arrow::Table>> vectorToColumnarTable(
    ARROW_RETURN_NOT_OK(estimateBuilder.Finish(&estimatesArray));
 
    std::vector<std::shared_ptr<arrow::Field>> schemaVector = {
-         arrow::field("id", arrow::utf8()),
+         arrow::field("Generation ID", arrow::utf8()),
          arrow::field("Distribution", arrow::utf8()),
          arrow::field("Voting Mechanism", arrow::utf8()),
          arrow::field("Number of Proxies", arrow::int32()),
