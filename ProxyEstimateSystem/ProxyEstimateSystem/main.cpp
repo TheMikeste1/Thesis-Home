@@ -105,6 +105,30 @@ void runSimulations(
                   rankings[inactiveAgent] = inactiveAgent->weight(proxies);
                }
 
+               // Calculate min, max, and average weights
+               // Sum the weights for each proxy
+               std::map<TruthEstimator*, double> weights;
+               for (auto* inactiveAgent: inactiveAgents)
+               {
+                  for (auto& [proxy, weight]: rankings[inactiveAgent])
+                  {
+                     weights[proxy] += weight;
+                  }
+               }
+               assert(weights.size() == proxies.size());
+               assert(weights.size() >= 0);
+               // Find the min, max, and average weights
+               double minWeight = 1;
+               double maxWeight = 0;
+               double totalWeight = 0;
+               for (auto& [proxy, weight]: weights)
+               {
+                  minWeight = std::min(minWeight, weight);
+                  maxWeight = std::max(maxWeight, weight);
+                  totalWeight += weight;
+               }
+               double averageWeight = totalWeight / weights.size();
+
                auto result = vm->solve(
                      proxies,
                      inactiveAgents,
@@ -121,7 +145,10 @@ void runSimulations(
                      vmName,
                      numberOfAgents - numInactiveAgents,
                      numInactiveAgents,
-                     result
+                     result,
+                     minWeight,
+                     maxWeight,
+                     averageWeight
                };
 
                generatedData.push_back(row);

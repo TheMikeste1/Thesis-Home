@@ -10,4 +10,7 @@ struct DataRow
    int numberOfProxies;
    int numberOfInactives;
    double estimate;
+   double minProxyWeight;
+   double maxProxyWeight;
+   double averageProxyWeight;
 };

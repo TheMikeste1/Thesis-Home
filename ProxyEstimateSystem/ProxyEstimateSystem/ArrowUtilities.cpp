@@ -19,6 +19,9 @@ arrow::Result<std::shared_ptr<arrow::Table>> vectorToColumnarTable(
    arrow::Int32Builder numberOfProxiesBuilder(pool);
    arrow::Int32Builder numberOfInactivesBuilder(pool);
    arrow::DoubleBuilder estimateBuilder(pool);
+   arrow::DoubleBuilder minProxyWeightBuilder(pool);
+   arrow::DoubleBuilder maxProxyWeightBuilder(pool);
+   arrow::DoubleBuilder averageProxyWeightBuilder(pool);
 
    // Now we can loop over our existing data and insert it into the builders. The
    // `Append` calls here may fail (e.g. we cannot allocate enough additional memory).
@@ -32,6 +35,9 @@ arrow::Result<std::shared_ptr<arrow::Table>> vectorToColumnarTable(
       ARROW_RETURN_NOT_OK(numberOfProxiesBuilder.Append(row.numberOfProxies));
       ARROW_RETURN_NOT_OK(numberOfInactivesBuilder.Append(row.numberOfInactives));
       ARROW_RETURN_NOT_OK(estimateBuilder.Append(row.estimate));
+      ARROW_RETURN_NOT_OK(minProxyWeightBuilder.Append(row.minProxyWeight));
+      ARROW_RETURN_NOT_OK(maxProxyWeightBuilder.Append(row.maxProxyWeight));
+      ARROW_RETURN_NOT_OK(averageProxyWeightBuilder.Append(row.averageProxyWeight));
    }
 
    // At the end, we finalise the arrays, declare the (type) schema and combine them
@@ -42,12 +48,18 @@ arrow::Result<std::shared_ptr<arrow::Table>> vectorToColumnarTable(
    std::shared_ptr<arrow::Array> numberOfProxiesArray;
    std::shared_ptr<arrow::Array> numberOfInactivesArray;
    std::shared_ptr<arrow::Array> estimatesArray;
+   std::shared_ptr<arrow::Array> minProxyWeightArray;
+   std::shared_ptr<arrow::Array> maxProxyWeightArray;
+   std::shared_ptr<arrow::Array> averageProxyWeightArray;
    ARROW_RETURN_NOT_OK(idBuilder.Finish(&idArray));
    ARROW_RETURN_NOT_OK(distributionBuilder.Finish(&distributionArray));
    ARROW_RETURN_NOT_OK(votingMechanismBuilder.Finish(&votingMechanismArray));
    ARROW_RETURN_NOT_OK(numberOfProxiesBuilder.Finish(&numberOfProxiesArray));
    ARROW_RETURN_NOT_OK(numberOfInactivesBuilder.Finish(&numberOfInactivesArray));
    ARROW_RETURN_NOT_OK(estimateBuilder.Finish(&estimatesArray));
+   ARROW_RETURN_NOT_OK(minProxyWeightBuilder.Finish(&minProxyWeightArray));
+   ARROW_RETURN_NOT_OK(maxProxyWeightBuilder.Finish(&maxProxyWeightArray));
+   ARROW_RETURN_NOT_OK(averageProxyWeightBuilder.Finish(&averageProxyWeightArray));
 
    std::vector<std::shared_ptr<arrow::Field>> schemaVector = {
          arrow::field("Generation ID", arrow::utf8()),
@@ -56,6 +68,9 @@ arrow::Result<std::shared_ptr<arrow::Table>> vectorToColumnarTable(
          arrow::field("Number of Proxies", arrow::int32()),
          arrow::field("Number of Inactives", arrow::int32()),
          arrow::field("Output", arrow::float64()),
+         arrow::field("Min Proxy Weight", arrow::float64()),
+         arrow::field("Max Proxy Weight", arrow::float64()),
+         arrow::field("Average Proxy Weight", arrow::float64())
    };
 
    auto schema = std::make_shared<arrow::Schema>(schemaVector);
@@ -73,6 +88,9 @@ arrow::Result<std::shared_ptr<arrow::Table>> vectorToColumnarTable(
                numberOfProxiesArray,
                numberOfInactivesArray,
                estimatesArray,
+               minProxyWeightArray,
+               maxProxyWeightArray,
+               averageProxyWeightArray
          }
    );
 
