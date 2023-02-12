@@ -4,3 +4,6 @@
 [submodule "Analysis"]
 	path = Analysis
 	url = https://github.com/TheMikeste1/Thesis-Analysis.git
+[submodule "ProxyVotingSimulation"]
+	path = ProxyVotingSimulation
+	url = git@github.com:TheMikeste1/ProxyVotingSimulation.git
